@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block page_name %}home{% endblock %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Welcome to Our Application</h1>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">Dashboard</div>
+          <div class="card-body">
+            <div
+              data-react-component="dashboard-widget"
+              data-props='{"userId": "{{ user.id }}"}'
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">User Profile</div>
+          <div class="card-body">
+            <div
+              data-react-component="user-profile"
+              data-user-id="{{ user.id }}"
+              data-username="{{ user.username }}"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% load vite %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="page-name" content="{% block page_name %}unknown{% endblock %}">
+  <title>{% block title %}My App{% endblock %}</title>
+
+  <!-- Automatically load the correct CSS and JS -->
+  <link rel="stylesheet" href="{% vite_asset 'src/main.tsx' 'css' %}">
+  <script type="module" defer src="{% vite_asset 'src/main.tsx' %}"></script>
+</head>
+<body>
+  {% block content %}{% endblock %}
+</body>
+</html>
