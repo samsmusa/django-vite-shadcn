@@ -1,17 +1,23 @@
-{% load vite %}
+{% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-<meta name="page-name" content="{% block page_name %}unknown{% endblock %}">
-  <title>{% block title %}My App{% endblock %}</title>
-
-  <!-- Automatically load the correct CSS and JS -->
-  <link rel="stylesheet" href="{% vite_asset 'src/main.tsx' 'css' %}">
-  <script type="module" defer src="{% vite_asset 'src/main.tsx' %}"></script>
+    <title>{% block title %}Django React App{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/vendors.css' %}">
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% endblock %}
 </head>
 <body>
-  {% block content %}{% endblock %}
+<div id="react-root"></div>
+
+{% block content %}{% endblock %}
+
+<!-- Load React main bundle and vendors -->
+<script src="{% static 'js/vendors.bundle.js' %}"></script>
+<script src="{% static 'js/main.bundle.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
 </body>
 </html>
