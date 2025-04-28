@@ -1,0 +1,64 @@
+{% load static %}
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en" class="{{ request.COOKIES.theme|default:'light' }}">
+<head>
+    <title>{% block title %}Django React App{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+
+    <script>
+        (function () {
+          function getCookie(name) {
+            let value = "; " + document.cookie;
+            let parts = value.split("; " + name + "=");
+            if (parts.length === 2) return parts.pop().split(";").shift();
+          }
+
+          const theme = getCookie('theme') || 'light';
+          const themeColor = getCookie('theme_color') || 'Blue';
+
+          document.documentElement.classList.add(theme);
+          window._theme = theme;
+          window._themeColor = themeColor;
+        })();
+    </script>
+
+    {% tailwind_css %}
+    <script src="{% static 'js/custom.js' %}"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+{% block content %}{% endblock %}
+
+<div class="fixed top-4 right-4 space-x-2 z-50">
+    <!-- For Light/Dark Mode Toggle -->
+    <a href="{% url 'switch_theme' %}?theme=light&theme_color={{ request.COOKIES.theme_color }}"
+       class="px-4 py-2 bg-gray-800 text-white rounded-md">Light Mode</a>
+    <a href="{% url 'switch_theme' %}?theme=dark&theme_color={{ request.COOKIES.theme_color }}"
+       class="px-4 py-2 bg-gray-800 text-white rounded-md">Dark Mode</a>
+
+    <!-- For Color Change Buttons -->
+    <a href="{% url 'switch_theme' %}?theme={{ request.COOKIES.theme }}&theme_color=Violate"
+       class="px-4 py-2 bg-blue-500 text-white rounded-md">Violate</a>
+    <a href="{% url 'switch_theme' %}?theme={{ request.COOKIES.theme }}&theme_color=Orange"
+       class="px-4 py-2 bg-secondary text-white rounded-md">Orange</a>
+</div>
+
+<script src="{% static 'js/vendors.bundle.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
+<!-- SET THEME COLORS (AFTER JS IS LOADED) -->
+<script>
+    // Wait until setGlobalColorTheme is defined
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof setGlobalColorTheme === "function") {
+        setGlobalColorTheme(window._theme || 'light', window._themeColor || 'Blue');
+      }
+    });
+</script>
+</body>
+</html>

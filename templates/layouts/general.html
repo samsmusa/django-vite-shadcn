@@ -1,0 +1,7 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    {% include "layouts/components/general/navbar.html" %}
+    {% block container %}
+    {% endblock %}
+    {{ request.COOKIES.theme }}
+{% endblock %}
