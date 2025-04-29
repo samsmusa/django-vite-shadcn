@@ -12,6 +12,9 @@ module.exports = {
       },
     },
     extend: {
+    fontFamily: {
+      sans: ['Averta Std', 'ui-sans-serif', 'system-ui'],
+    },
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",

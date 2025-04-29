@@ -14,9 +14,6 @@ const HomeComponent: React.FC<HomeProps> = ({username, initialData}) => {
         <div className="home-component">
             {username} and {initialData}
             <div className="bg-red-600">Helw</div>
-            <button>HKJKJSKJDKJS</button>
-            <Button>Button</Button>
-            <button>HKJKJSKJDKJS</button>
         </div>
     );
 };
