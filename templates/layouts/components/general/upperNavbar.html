@@ -1,77 +1,117 @@
 {% load static %}
 <ul class="nav px-3 py-2.5 flex flex-wrap justify-between items-center gap-4 md:gap-6 md:flex-nowrap md:px-6  whitespace-nowrap 2xl:justify-center">
-        <li class="nav-item flex items-center gap-4">
-          <button
-            class="hamburger cursor-pointer text-2xl md:hidden"
-          >
+    <li class="nav-item flex items-center gap-4">
+        <button
+                class="hamburger cursor-pointer text-2xl md:hidden"
+        >
             <i class="fa-solid fa-bars"></i>
-          </button>
-          <a
-            href="/"
-            class="amazon-logo cursor-pointer mt-1 w-20 md:w-24"
-          >
-            <img class="h-full" src="{amazon_logo_white}" alt="amazon.in" />
-          </a>
-        </li>
-        <li class="flex-1 md:hidden"></li>
-        <li class="md:order-5">
-          <a href="/sign-in"
-            class="user cursor-pointer flex items-center text-xs gap-1 "
-          >
+        </button>
+        <a
+                href="/"
+                class="amazon-logo cursor-pointer mt-1 w-20 md:w-24"
+        >
+            <img class="h-full" src="https://picsum.photos/200/100" alt="amazon.in"/>
+        </a>
+    </li>
+    <li class="flex-1 md:hidden"></li>
+    <li class="md:order-5">
+        <a href="/sign-in"
+           class="user cursor-pointer flex items-center text-xs gap-1 "
+        >
             <span>
               Sign in <i class="fa-solid fa-chevron-right"></i>
             </span>
             <span>
               <i class="fa-regular fa-user text-xl"></i>
             </span>
-          </a>
-        </li>
-        <li class="cart cursor-pointer text-xl md:order-7">
-          <a href="/cart-screen">
+        </a>
+    </li>
+    <li class="cart cursor-pointer text-xl md:order-7">
+        <a href="/cart-screen">
             <i class="fa-solid fa-cart-shopping"></i>
             <span class="hidden md:inline text-base font-medium">Cart</span>
-          </a>
-        </li>
-        <li class="nav-item search flex items-center items-stretch  mx-auto w-full text-black md:order-3 md:mx-3">
-          <div id="navbar-category-container"></div>
-          <input
-            class="w-full rounded-l-lg border-none bg-white outline-none px-2 py-2.5 lg:py-2 lg:rounded-none"
-            type="search"
-            name="search"
-            id="search"
-            placeholder="Search Amazon.in"
-          />
-        </li>
-        <li class="nav-item location cursor-pointer flex items-end gap-2 md:order-2">
-          <div class="text-xl">
-            <i class="fa-solid fa-location-dot"></i>
-          </div>
-          <div class="space-y-0 leading-5">
-            <div class="upper text-gray-400 text-xs">Select your</div>
-            <div class="lower font-medium">Location</div>
-          </div>
-        </li>
-        <li class="nav-item country cursor-pointer flex items-center gap-2 md:order-4">
-          <div class="w-5">
+        </a>
+    </li>
+    <li class="nav-item search flex items-center items-stretch  mx-auto w-full text-black md:order-3 md:mx-3">
+        <label class="hidden" for="main-dropdown">Category</label>
+        <select
+                class="h-10 w-28 hidden lg:block border-2 text-xs rounded-l-md bg-gray-100 text-gray-700"
+                name="main-dropdown"
+                id="main-dropdown"
+        >
+            <option
+                    class="text-base"
+            >
+                All
+            </option>
+        </select>
+        <label class="hidden" for="search"></label>
+        <input
+                class="w-full rounded-l-lg border-none bg-white outline-none px-2 py-2.5 lg:py-2 lg:rounded-none"
+                type="search"
+                name="search"
+                id="search"
+                placeholder="Search Amazon.in"
+        />
+    </li>
+    <li class="nav-item location cursor-pointer flex items-end gap-2 md:order-2">
+        <div class="relative group inline-block">
+            <button class="px-4 py-2 bg-blue-600 text-white rounded-md">
+                Hover me
+            </button>
+
+            <div class="absolute left-0 top-full mt-2 w-64 p-4 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300 z-50">
+                <h3 class="text-sm font-semibold mb-2">Overlay Title</h3>
+                <p class="text-sm text-gray-600">This is a "paper" overlay that appears when you hover.</p>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item country cursor-pointer flex items-center gap-2 md:order-4">
+        <div class="w-5">
+
             <img
-              class="w-full h-full"
-              src="{indian_flag}"
-              alt="indian-flag"
+                    class="w-full h-full"
+                    src="https://picsum.photos/200/300"
+                    alt="indian-flag"
             />
-          </div>
-          <div class="flex items-center gap-1 font-medium">
+        </div>
+        <div class="flex items-center gap-1 font-medium">
             EN <i class="fa-solid fa-sort-down text-xs text-gray-400"></i>
-          </div>
-        </li>
-        <li class="nav-item returns cursor-pointer md:order-6">
-          <div class="space-y-0 leading-5">
+        </div>
+    </li>
+    <li class="nav-item returns cursor-pointer md:order-6">
+        <div class="space-y-0 leading-5">
             <div class="upper text-start text-xs">Returns</div>
             <div class="lower font-medium">& Orders</div>
-          </div>
-        </li>
-      </ul>
+        </div>
+    </li>
+</ul>
 
-
-{% block extra_js %}
-    <script src="{% static 'js/navbarcategorydropdown.bundle.js' %}"></script>
-{% endblock %}
+<script>
+    function makeOption(item){
+    const option = document.createElement("option");
+    option.value = item?.id;
+    option.textContent = item?.name;
+    return option;
+    }
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("/nav-categories/")
+        .then(response => {
+            if (!response.ok) throw new Error("Network response was not ok");
+            return response.json();
+        })
+        .then(data => {
+            const dropdown = document.getElementById("main-dropdown");
+            dropdown.innerHTML = "";  // Clear existing options
+            const option = makeOption({id: 0, name: "All"})
+                dropdown.appendChild(option);
+            data.forEach(item => {
+                const option = makeOption(item)
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching nav items:", error);
+        });
+});
+</script>

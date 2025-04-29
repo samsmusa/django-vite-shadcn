@@ -1,6 +1,6 @@
 import json
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -51,3 +51,9 @@ def switch_theme(request):
     )
 
     return response
+
+
+
+def nav_items_api(request):
+    items = [{"id": 1, "name": "Item 1"}, {"id": 2, "name": "Item 2"}]
+    return JsonResponse(list(items), safe=False)
