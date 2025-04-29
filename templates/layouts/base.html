@@ -32,19 +32,19 @@
 <body>
 {% block content %}{% endblock %}
 
-<div class="fixed top-4 right-4 space-x-2 z-50">
-    <!-- For Light/Dark Mode Toggle -->
-    <a href="{% url 'switch_theme' %}?theme=light&theme_color={{ request.COOKIES.theme_color }}"
-       class="px-4 py-2 bg-gray-800 text-white rounded-md">Light Mode</a>
-    <a href="{% url 'switch_theme' %}?theme=dark&theme_color={{ request.COOKIES.theme_color }}"
-       class="px-4 py-2 bg-gray-800 text-white rounded-md">Dark Mode</a>
-
-    <!-- For Color Change Buttons -->
-    <a href="{% url 'switch_theme' %}?theme={{ request.COOKIES.theme }}&theme_color=Violate"
-       class="px-4 py-2 bg-blue-500 text-white rounded-md">Violate</a>
-    <a href="{% url 'switch_theme' %}?theme={{ request.COOKIES.theme }}&theme_color=Orange"
-       class="px-4 py-2 bg-secondary text-white rounded-md">Orange</a>
-</div>
+{#<div class="fixed top-4 right-4 space-x-2 z-50">#}
+{#    <!-- For Light/Dark Mode Toggle -->#}
+{#    <a href="{% url 'switch_theme' %}?theme=light&theme_color={{ request.COOKIES.theme_color }}"#}
+{#       class="px-4 py-2 bg-gray-800 text-white rounded-md">Light Mode</a>#}
+{#    <a href="{% url 'switch_theme' %}?theme=dark&theme_color={{ request.COOKIES.theme_color }}"#}
+{#       class="px-4 py-2 bg-gray-800 text-white rounded-md">Dark Mode</a>#}
+{##}
+{#    <!-- For Color Change Buttons -->#}
+{#    <a href="{% url 'switch_theme' %}?theme={{ request.COOKIES.theme }}&theme_color=Violate"#}
+{#       class="px-4 py-2 bg-blue-500 text-white rounded-md">Violate</a>#}
+{#    <a href="{% url 'switch_theme' %}?theme={{ request.COOKIES.theme }}&theme_color=Orange"#}
+{#       class="px-4 py-2 bg-secondary text-white rounded-md">Orange</a>#}
+{#</div>#}
 
 <script src="{% static 'js/vendors.bundle.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>
