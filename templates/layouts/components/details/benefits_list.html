@@ -1,0 +1,8 @@
+<div class="SERVICES flex flex-wrap justify-start items-start gap-x-1 md:gap-x-0 text-xs">
+  {% for benefit in benefits %}
+    <div class="cursor-pointer flex flex-col flex-1 md:flex-initial md:w-24 gap-1 justify-center items-center text-center">
+      <img class="h-10 object-contain sm:h-9" src="{{ benefit.img_url }}" alt="{{ benefit.caption }}">
+      <p class="text-sky-700">{{ benefit.caption }}</p>
+    </div>
+  {% endfor %}
+</div>

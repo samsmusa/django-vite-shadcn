@@ -119,6 +119,7 @@ function setGlobalColorTheme(themeMode, color) {
             },
         },
     }
+    console.log(color, themeMode)
     const theme = themes[color][themeMode]
     if (!theme) {
         console.error(`Invalid theme or mode: ${color} - ${themeMode}`)

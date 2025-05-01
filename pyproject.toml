@@ -8,5 +8,9 @@ dependencies = [
     "cookiecutter>=2.6.0",
     "django>=5.2",
     "django-browser-reload>=1.18.0",
+    "django-redis>=5.4.0",
+    "django-rest-framework>=0.1.0",
     "django-tailwind>=4.0.1",
+    "ipython>=9.2.0",
+    "locust>=2.36.2",
 ]

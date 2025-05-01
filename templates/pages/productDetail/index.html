@@ -1,0 +1,87 @@
+{% extends 'layouts/general.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block container %}
+<div class="bg-white">
+  <div class="max-w-[1500px] mx-auto">
+    <div class="flex flex-col justify-center gap-4 sm:gap-1 lg:gap-10 md:flex-row pb-10 md:pt-10 md:px-4">
+      <!-- product image -->
+      <img
+        class="object-contain object-top sm:max-w-xs lg:max-w-sm w-fit mx-auto md:mx-0"
+        src="{{ product.img_url }}"
+        alt="{{ product.title }}"
+      />
+
+      <!-- product details -->
+      <section class="px-3 w-full space-y-2 text-sm md:max-w-2xl">
+        <h1 class="text-base md:text-2xl">
+          {{ product.title }}
+        </h1>
+
+        <!-- rating stars -->
+        <p class="RATING_STARS text-amber-500 text-xs">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star-half-stroke"></i>
+          <i class="fa-regular fa-star"></i>
+        </p>
+        <hr class="mt-1" />
+
+        <h2>&#8377;<span class="text-3xl">{{ product.price }}</span></h2>
+        <h3 class="text-gray-500 text-xs">
+          M.R.P.: <span class="line-through">&#8377;{{ product.mrp }}</span>
+        </h3>
+
+        <img
+          class="w-16 object-contain py-1"
+          src="https://m.media-amazon.com/images/G/31/marketing/fba/fba-badge_18px._CB485936079_.png"
+          alt=""
+        />
+        <p>Inclusive of all taxes</p>
+        <hr class="my-3" />
+
+        <!-- Offers -->
+        <h4 class="flex items-center gap-3 md:gap-4 pt-2">
+          <img class="w-6" src="{{ offer_icon_url }}" alt="Offers" />
+          <p class="font-bold text-base">Offers</p>
+        </h4>
+
+        <section id="details-offer-slider" class="w-full list-none flex gap-3 items-center">
+        </section>
+
+        <hr class="my-3" />
+
+        <!-- Benefits -->
+        {% include "benefits_list.html" %}
+
+        <hr class="my-3" />
+
+        <!-- Buttons -->
+        <div class="BUTTONS py-6 flex flex-col gap-3 items-center md:flex-row">
+          <form method="post" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="cursor-pointer p-3 bg-yellow-400 w-full md:max-w-[200px] rounded-full drop-shadow-md hover:brightness-90 active:scale-95 md:active:scale-90 transition md:p-2"
+            >
+              Add to Cart
+            </button>
+          </form>
+          <form method="post" action="{% url 'buy_now' product.id %}">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="cursor-pointer p-3 bg-amber-500 w-full md:max-w-[200px] rounded-full drop-shadow-md hover:brightness-90 active:scale-95 md:active:scale-90 transition md:p-2"
+            >
+              Buy Now
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}
