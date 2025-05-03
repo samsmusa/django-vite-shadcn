@@ -29,6 +29,20 @@ ALLOWED_HOSTS = [
 
 # Application definition
 
+THIRD_PARTY_APPS = [
+    'tailwind',
+    "theme",
+    "rest_framework",
+    "corsheaders",
+    'django_browser_reload'
+]
+
+LOCAL_APPS = [
+    "account",
+    "ecommerce",
+    # 'app'
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,15 +50,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    "app",
-    'tailwind',
-    "theme",
-
-    'django_browser_reload'
-]
+] + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -137,3 +146,9 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TAILWIND_APP_NAME = 'theme'
+
+CORS_ALLOWED_ORIGINS = [
+    "https://e-kassa.fi",
+]
+
+AUTH_USER_MODEL = "account.User"

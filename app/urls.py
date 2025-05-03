@@ -1,6 +1,12 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
 from . import views
+from .views import DiscountViewSet
+
+router = DefaultRouter()
+
+router.register(r'discounts', DiscountViewSet)
 
 urlpatterns = [
 
@@ -12,5 +18,8 @@ urlpatterns = [
 	path('async/', views.async_view),
 	path('add/', views.add_view),
 	path('products/', views.expensive_products_view, name='expensive-products'),
-	path('details/', views.mock_product_detail(), name='detail-products'),
+	path('product/<int:product_id>/', views.product_detail_view, name='product_detail'),
+	path('category/<slug:category_slug>/', views.category_product_list, name='category_products'),
+	path('', include(router.urls)),
+	path("invoice/", views.invoice_view, name="invoice"),
 ]

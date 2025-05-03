@@ -1,7 +1,10 @@
 {% extends 'layouts/base.html' %}
+
 {% block content %}
     {% include "layouts/components/general/navbar.html" %}
     {% block container %}
     {% endblock %}
     {{ request.COOKIES.theme }}
+
+    {% include 'layouts/components/general/footer.html' %}
 {% endblock %}

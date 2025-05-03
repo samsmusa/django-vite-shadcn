@@ -1,0 +1,80 @@
+{% extends 'layouts/general.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block container %}
+    <div class="relative max-w-[1500px] mx-auto bg-base-600">
+        <div class="flex justify-between items-center border-b pb-4 mb-6">
+            <h1 class="text-2xl font-bold text-orange-500">amazon</h1>
+            <div class="text-right text-sm">
+                <p>Order #: <span class="font-medium">{{ order.order_number }}</span></p>
+                <p>Date: {{ order.date }}</p>
+            </div>
+        </div>
+
+        <!-- Shipping Info -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold border-b pb-2 mb-2">Shipping Address</h2>
+            <p class="text-sm leading-6">
+                {{ order.customer_name }}<br>
+                {{ order.address }}<br>
+                {{ order.city }}, {{ order.zip_code }}<br>
+                {{ order.country }}
+            </p>
+        </div>
+
+        <!-- Items Table -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold border-b pb-2 mb-2">Order Details</h2>
+            <table class="w-full text-sm table-auto border-collapse">
+                <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="border p-2">Product</th>
+                    <th class="border p-2">ASIN</th>
+                    <th class="border p-2 text-center">Qty</th>
+                    <th class="border p-2 text-right">Unit Price</th>
+                    <th class="border p-2 text-right">Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in order.items %}
+                    <tr>
+                        <td class="border p-2">{{ item.name }}</td>
+                        <td class="border p-2">{{ item.asin }}</td>
+                        <td class="border p-2 text-center">{{ item.quantity }}</td>
+                        <td class="border p-2 text-right">${{ item.unit_price }}</td>
+                        <td class="border p-2 text-right">${{ item.total_price }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totals -->
+        <div class="flex justify-end">
+            <div class="w-full max-w-md text-sm">
+                <table class="w-full">
+                    <tr>
+                        <td class="p-2 text-right font-medium">Subtotal</td>
+                        <td class="p-2 text-right">${{ order.subtotal }}</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2 text-right font-medium">Shipping</td>
+                        <td class="p-2 text-right">${{ order.shipping_cost }}</td>
+                    </tr>
+                    <tr class="border-t border-gray-300">
+                        <td class="p-2 text-right font-bold">Total</td>
+                        <td class="p-2 text-right font-bold">${{ order.total }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-10 text-xs text-gray-500 text-center border-t pt-4">
+            <p>Thank you for shopping with Amazon!</p>
+            <p>This is a system-generated invoice and does not require a signature.</p>
+        </div>
+    </div>
+{% endblock %}

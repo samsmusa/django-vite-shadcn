@@ -11,7 +11,7 @@ export function Hydrate<T extends object>({component: Component, containerId, pr
     if (!container) return null;
 
     const props = propNames.reduce<Partial<T>>((acc, key) => {
-        const raw = container.getAttribute(`data-${String(key)}`);
+        const raw = container.getAttribute(`data-${String(key).replace("_", '-')}`);
         try {
             if (raw) {
                 if (raw.startsWith('{') || raw.startsWith('[')) {

@@ -1,12 +1,13 @@
 {% extends 'layouts/general.html' %}
 {% load static %}
 
-{% block title %}Home{% endblock %}
+{% block title %}{{ product.title }} | Product Details{% endblock %}
 
 {% block container %}
 <div class="bg-white">
   <div class="max-w-[1500px] mx-auto">
     <div class="flex flex-col justify-center gap-4 sm:gap-1 lg:gap-10 md:flex-row pb-10 md:pt-10 md:px-4">
+      
       <!-- product image -->
       <img
         class="object-contain object-top sm:max-w-xs lg:max-w-sm w-fit mx-auto md:mx-0"
@@ -16,17 +17,18 @@
 
       <!-- product details -->
       <section class="px-3 w-full space-y-2 text-sm md:max-w-2xl">
-        <h1 class="text-base md:text-2xl">
+        <h1 class="text-base md:text-2xl font-semibold">
           {{ product.title }}
         </h1>
 
         <!-- rating stars -->
-        <p class="RATING_STARS text-amber-500 text-xs">
+        <p class="text-amber-500 text-xs">
           <i class="fa-solid fa-star"></i>
           <i class="fa-solid fa-star"></i>
           <i class="fa-solid fa-star"></i>
           <i class="fa-solid fa-star-half-stroke"></i>
           <i class="fa-regular fa-star"></i>
+          <span class="text-gray-500 ml-2">(123 ratings)</span>
         </p>
         <hr class="mt-1" />
 
@@ -38,7 +40,7 @@
         <img
           class="w-16 object-contain py-1"
           src="https://m.media-amazon.com/images/G/31/marketing/fba/fba-badge_18px._CB485936079_.png"
-          alt=""
+          alt="Fulfilled by Amazon"
         />
         <p>Inclusive of all taxes</p>
         <hr class="my-3" />
@@ -48,33 +50,35 @@
           <img class="w-6" src="{{ offer_icon_url }}" alt="Offers" />
           <p class="font-bold text-base">Offers</p>
         </h4>
-
         <section id="details-offer-slider" class="w-full list-none flex gap-3 items-center">
+          {% for offer in product.offers %}
+          <div class="bg-gray-100 p-2 rounded-md text-xs">{{ offer }}</div>
+          {% endfor %}
         </section>
 
         <hr class="my-3" />
 
         <!-- Benefits -->
-        {% include "benefits_list.html" %}
+        {% include "layouts/components/details/benefits_list.html" %}
 
         <hr class="my-3" />
 
         <!-- Buttons -->
-        <div class="BUTTONS py-6 flex flex-col gap-3 items-center md:flex-row">
-          <form method="post" action="{% url 'add_to_cart' product.id %}">
+        <div class="py-6 flex flex-col gap-3 items-center md:flex-row">
+          <form method="post">
             {% csrf_token %}
             <button
               type="submit"
-              class="cursor-pointer p-3 bg-yellow-400 w-full md:max-w-[200px] rounded-full drop-shadow-md hover:brightness-90 active:scale-95 md:active:scale-90 transition md:p-2"
+              class="p-3 bg-yellow-400 w-full md:max-w-[200px] rounded-full hover:brightness-90 active:scale-95 transition"
             >
               Add to Cart
             </button>
           </form>
-          <form method="post" action="{% url 'buy_now' product.id %}">
+          <form method="post">
             {% csrf_token %}
             <button
               type="submit"
-              class="cursor-pointer p-3 bg-amber-500 w-full md:max-w-[200px] rounded-full drop-shadow-md hover:brightness-90 active:scale-95 md:active:scale-90 transition md:p-2"
+              class="p-3 bg-amber-500 w-full md:max-w-[200px] rounded-full hover:brightness-90 active:scale-95 transition"
             >
               Buy Now
             </button>
@@ -82,6 +86,106 @@
         </div>
       </section>
     </div>
+
+    <!-- Product Description -->
+    <section class="px-4 md:px-10 py-6 border-t">
+      <h2 class="text-xl font-semibold mb-2">Product Description</h2>
+      <p class="text-sm text-gray-700">{{ product.description|linebreaks }}</p>
+    </section>
+
+    <!-- Specifications -->
+    <section class="px-4 md:px-10 py-6 border-t">
+      <h2 class="text-xl font-semibold mb-2">Specifications</h2>
+      <ul class="text-sm list-disc pl-6 space-y-1">
+        {% for spec in product.specifications %}
+        <li><strong>{{ spec.name }}:</strong> {{ spec.value }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <!-- Customer Reviews -->
+    <section class="px-4 md:px-10 py-6 border-t">
+      <h2 class="text-xl font-semibold mb-4">Customer Reviews</h2>
+      {% for review in product.reviews %}
+      <div class="mb-4 border-b pb-4">
+        <p class="text-sm font-semibold">{{ review.user }}</p>
+        <div class="text-amber-500 text-xs mb-1">
+          {% for i in "12345"|slice:":review.rating" %}
+            <i class="fa-solid fa-star"></i>
+          {% endfor %}
+        </div>
+        <p class="text-sm text-gray-700">{{ review.text }}</p>
+      </div>
+      {% empty %}
+      <p class="text-sm text-gray-500">No reviews yet.</p>
+      {% endfor %}
+    </section>
+
+    <!-- Frequently Bought Together -->
+    <section class="px-4 md:px-10 py-6 border-t">
+      <h2 class="text-xl font-semibold mb-4">Frequently Bought Together</h2>
+      <div class="flex overflow-x-auto gap-4">
+        {% for item in product.frequently_bought %}
+        <div class="min-w-[150px] w-[150px] flex-shrink-0">
+          <img src="{{ item.img_url }}" alt="{{ item.title }}" class="w-full h-32 object-contain">
+          <p class="text-sm mt-1">{{ item.title }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Similar Products -->
+    <section class="px-4 md:px-10 py-6 border-t">
+      <h2 class="text-xl font-semibold mb-4">Similar Products</h2>
+      <div class="flex overflow-x-auto gap-4">
+        {% for item in product.similar_products %}
+        <div class="min-w-[150px] w-[150px] flex-shrink-0">
+          <a href="{% url 'product_detail' item.id %}">
+            <img src="{{ item.img_url }}" alt="{{ item.title }}" class="w-full h-32 object-contain">
+            <p class="text-sm mt-1">{{ item.title }}</p>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  
+  <!-- Compare with Similar Items -->
+<section class="px-4 md:px-10 py-6 border-t">
+  <h2 class="text-xl font-semibold mb-4">Compare with similar items</h2>
+  <div class="overflow-x-auto w-full">
+    <table class="min-w-[700px] w-full text-sm text-left text-gray-700 border border-gray-200">
+      <thead class="bg-gray-100 text-xs uppercase">
+        <tr>
+          <th class="p-2 w-1/4">Item</th>
+          <th class="p-2">Price</th>
+          <th class="p-2">Rating</th>
+          <th class="p-2">Battery</th>
+          <th class="p-2">Bluetooth</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in product.compare_items %}
+        <tr class="border-t hover:bg-gray-50">
+          <td class="flex items-center gap-2 p-2">
+            <img src="{{ item.img_url }}" alt="{{ item.title }}" class="w-14 h-14 object-contain" />
+            <span class="text-sm">{{ item.title }}</span>
+          </td>
+          <td class="p-2">&#8377;{{ item.price }}</td>
+          <td class="p-2 text-amber-500">
+            {% for i in "12345"|slice:":item.rating" %}
+              <i class="fa-solid fa-star text-xs"></i>
+            {% endfor %}
+            <span class="text-gray-500 text-xs">({{ item.rating_count }})</span>
+          </td>
+          <td class="p-2">{{ item.battery }}</td>
+          <td class="p-2">{{ item.bluetooth }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
   </div>
 </div>
 {% endblock %}
