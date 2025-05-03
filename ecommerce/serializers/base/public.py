@@ -11,7 +11,17 @@ class BrandSerializer(serializers.ModelSerializer):
 		fields = ['id', 'name']
 
 
+class RecursiveCategorySerializer(serializers.Serializer):
+	"""Used for recursively nesting child categories"""
+
+	def to_representation(self, value):
+		serializer = self.parent.parent.__class__(value, context=self.context)
+		return serializer.data
+
+
 class CategorySerializer(serializers.ModelSerializer):
+	children = RecursiveCategorySerializer(many=True, read_only=True)
+
 	class Meta:
 		model = Category
-		fields = ['id', 'name', 'slug']
+		fields = ['id', 'name', 'slug', 'description', 'image', 'is_active', 'children']

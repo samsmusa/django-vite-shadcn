@@ -28,7 +28,7 @@ class ProductSerializer(serializers.ModelSerializer):
 	brand = BrandSerializer(read_only=True)
 	category = CategorySerializer(read_only=True)
 	images = ProductImageSerializer(many=True, read_only=True)
-	price = serializers.DecimalField(source='price', max_digits=10, decimal_places=2, read_only=True)
+	price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 	discount_percentage = serializers.IntegerField(read_only=True)
 	is_on_sale = serializers.BooleanField(read_only=True)
 
