@@ -2,9 +2,9 @@ from rest_framework import serializers
 
 from ecommerce.models import (
 	Product, ProductVariant, ProductImage,
-	ProductReview
+	ProductReview, Cart, CartItem, Wishlist, WishlistItem
 )
-from ecommerce.serializers.base.public import BrandSerializer, CategorySerializer
+from ecommerce.serializers.base.public import BrandSerializer, CategoryOnlySerializer
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
 	brand = BrandSerializer(read_only=True)
-	category = CategorySerializer(read_only=True)
+	category = CategoryOnlySerializer(read_only=True)
 	images = ProductImageSerializer(many=True, read_only=True)
 	price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 	discount_percentage = serializers.IntegerField(read_only=True)
@@ -43,7 +43,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductDetailSerializer(serializers.ModelSerializer):
 	brand = BrandSerializer(read_only=True)
-	category = CategorySerializer(read_only=True)
+	category = CategoryOnlySerializer(read_only=True)
 	images = ProductImageSerializer(many=True, read_only=True)
 	variants = ProductVariantSerializer(many=True, read_only=True)
 	is_on_sale = serializers.BooleanField(read_only=True)
@@ -72,3 +72,45 @@ class ProductReviewSerializer(serializers.ModelSerializer):
 			'is_verified_purchase', 'is_approved', 'created_at'
 		]
 		read_only_fields = ['product', 'user', 'is_approved', 'created_at']
+
+
+class CartSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Cart
+		fields = [
+			'id', 'user', 'session_id', "updated_at", "discount", 'created_at'
+		]
+		read_only_fields = ['user', 'updated_at', 'created_at']
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+	product = ProductSerializer(read_only=True)
+	variant = ProductVariantSerializer(read_only=True)
+
+	class Meta:
+		model = CartItem
+		fields = [
+			'id', 'cart', 'product', 'variant', 'quantity', 'created_at'
+		]
+		read_only_fields = ['updated_at', 'created_at']
+
+
+class WishSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Wishlist
+		fields = [
+			'id', 'user', 'name', "updated_at", "is_public", 'created_at'
+		]
+		read_only_fields = ['user', 'updated_at', 'created_at']
+
+
+class WishItemSerializer(serializers.ModelSerializer):
+	product = ProductSerializer(read_only=True)
+	variant = ProductVariantSerializer(read_only=True)
+
+	class Meta:
+		model = WishlistItem
+		fields = [
+			'id', 'product', 'variant', 'created_at'
+		]
+		read_only_fields = ['updated_at', 'created_at']

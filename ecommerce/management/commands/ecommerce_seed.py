@@ -54,6 +54,7 @@ class Command(BaseCommand):
 		# Create products and related data
 		self.create_products(options['products'])
 		self.create_discounts()
+
 		self.stdout.write(self.style.SUCCESS('Successfully seeded the database!'))
 
 	def clear_data(self):
