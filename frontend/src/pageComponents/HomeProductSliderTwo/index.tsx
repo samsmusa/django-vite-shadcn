@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
 import ProductSlider from "@/components/common/ProductSlider";
+import useAxios, {PaginatedResponse} from "@/hooks/useAxios";
+import {Product} from "@/interfaces/product";
 
 
 interface IProps {
@@ -59,11 +61,37 @@ const productSlider2Data = {
 };
 
 const Main: React.FC<IProps> = ({}) => {
+    const api = useAxios<PaginatedResponse<Product>>({
+        baseURL: '/api/public/products/',
+        initialState: {
+            loading: true,
+            error: null,
+            data: {
+                count: 0,
+                next: null,
+                previous: null,
+                results: [],
+            },
+        },
+    });
+
+    const {list, data, loading, error} = api;
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                await list('');
+            } catch (e) {
+                console.error('Failed to fetch products', e);
+            }
+        };
+        fetchProducts();
+    }, []);
     return (
             <ProductSlider
                 title={productSlider2Data.title}
                 buttonName={productSlider2Data.buttonName}
-                allProductsData={productSlider2Data.allProductsData}
+                buttonUrl="products"
+                allProductsData={data?.results || []}
             />
     );
 };

@@ -42,7 +42,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "account",
     "ecommerce",
-    # 'app'
+    'app'
 ]
 
 INSTALLED_APPS = [

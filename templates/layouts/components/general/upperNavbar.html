@@ -118,7 +118,7 @@
     return option;
     }
 document.addEventListener("DOMContentLoaded", function () {
-    fetch("/nav-categories/")
+    fetch("/api/public/category/")
         .then(response => {
             if (!response.ok) throw new Error("Network response was not ok");
             return response.json();
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
             dropdown.innerHTML = "";  // Clear existing options
             const option = makeOption({id: 0, name: "All"})
                 dropdown.appendChild(option);
-            data.forEach(item => {
+            data?.results.forEach(item => {
                 const option = makeOption(item)
                 dropdown.appendChild(option);
             });

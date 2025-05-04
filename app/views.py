@@ -12,22 +12,21 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app.models import Product, Discount
 from app.serializers import ProductSerializer, DiscountSerializer
 
-
-class DiscountViewSet(viewsets.ModelViewSet):
-	queryset = Discount.objects.all()
-	serializer_class = DiscountSerializer
-
-	@action(detail=False, methods=['get'], url_path='by-name/(?P<name>[^/.]+)')
-	def get_by_name(self, request, name=None):
-		try:
-			discount = Discount.objects.get(name=name)
-			serializer = self.get_serializer(discount)
-			return Response(serializer.data)
-		except Discount.DoesNotExist:
-			return Response({'detail': 'Discount not found.'}, status=status.HTTP_404_NOT_FOUND)
+#
+# class DiscountViewSet(viewsets.ModelViewSet):
+# 	queryset = Discount.objects.all()
+# 	serializer_class = DiscountSerializer
+#
+# 	@action(detail=False, methods=['get'], url_path='by-name/(?P<name>[^/.]+)')
+# 	def get_by_name(self, request, name=None):
+# 		try:
+# 			discount = Discount.objects.get(name=name)
+# 			serializer = self.get_serializer(discount)
+# 			return Response(serializer.data)
+# 		except Discount.DoesNotExist:
+# 			return Response({'detail': 'Discount not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 def home_view(request):
@@ -99,35 +98,35 @@ def add_view(request):
 	return JsonResponse({"result": a + b})
 
 
-def expensive_products_view(request):
-	cache_key = 'top_expensive_products'
-	data = cache.get(cache_key)
-
-	if not data:
-		start = time.time()
-		data = list(Product.objects.filter(in_stock=True).order_by('-price')[:1000].values())
-		cache.set(cache_key, data, timeout=60 * 10)  # cache for 10 minutes
-		print(f"Queried DB in {time.time() - start:.2f}s")
-	else:
-		print("Cache hit!")
-
-	return JsonResponse(data, safe=False)
-
-
-class ExpensiveProductView(APIView):
-	def get(self, request):
-		cache_key = "api:expensive_products"
-		cached_data = cache.get(cache_key)
-
-		if cached_data:
-			return Response(cached_data, status=200)
-
-		# Simulate expensive DB operation
-		products = Product.objects.filter(in_stock=True).order_by("-price")[:500]
-		data = ProductSerializer(products, many=True).data
-		cache.set(cache_key, data, timeout=600)  # Cache for 10 minutes
-
-		return Response(data, status=200)
+# def expensive_products_view(request):
+# 	cache_key = 'top_expensive_products'
+# 	data = cache.get(cache_key)
+#
+# 	if not data:
+# 		start = time.time()
+# 		data = list(Product.objects.filter(in_stock=True).order_by('-price')[:1000].values())
+# 		cache.set(cache_key, data, timeout=60 * 10)  # cache for 10 minutes
+# 		print(f"Queried DB in {time.time() - start:.2f}s")
+# 	else:
+# 		print("Cache hit!")
+#
+# 	return JsonResponse(data, safe=False)
+#
+#
+# class ExpensiveProductView(APIView):
+# 	def get(self, request):
+# 		cache_key = "api:expensive_products"
+# 		cached_data = cache.get(cache_key)
+#
+# 		if cached_data:
+# 			return Response(cached_data, status=200)
+#
+# 		# Simulate expensive DB operation
+# 		products = Product.objects.filter(in_stock=True).order_by("-price")[:500]
+# 		data = ProductSerializer(products, many=True).data
+# 		cache.set(cache_key, data, timeout=600)  # Cache for 10 minutes
+#
+# 		return Response(data, status=200)
 
 
 from django.shortcuts import render

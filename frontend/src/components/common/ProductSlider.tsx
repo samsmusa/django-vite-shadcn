@@ -4,18 +4,13 @@ import {Navigation} from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import {Product} from "@/interfaces/product";
 
-
-interface Product {
-    imageUrl: string;
-    off?: number;
-    offerName?: string;
-    productTitle?: string;
-}
 
 interface ProductSliderProps {
     title: string;
     buttonName: string;
+    buttonUrl: string;
     allProductsData: Product[];
 }
 
@@ -24,12 +19,13 @@ interface SlideProps {
     off?: number;
     offerName?: string;
     productTitle?: string;
+    slug: string
 }
 
 
-const Slide: React.FC<SlideProps> = ({image, off, offerName, productTitle}) => {
+const Slide: React.FC<SlideProps> = ({image, slug, off, offerName, productTitle}) => {
     return (
-        <a href="/productS-listing-page">
+        <a href={`/product/${slug}`} key={slug}>
             <div
                 className="cursor-pointer flex flex-col gap-2 h-full w-fit md:min-w-[190px] max-w-[190px] xs:max-w-[250px]">
                 {image && (
@@ -63,15 +59,16 @@ const Slide: React.FC<SlideProps> = ({image, off, offerName, productTitle}) => {
 const ProductSlider: React.FC<ProductSliderProps> = ({
                                                          title,
                                                          buttonName,
+                                                         buttonUrl,
                                                          allProductsData,
                                                      }) => {
     return (
         <div className="w-full space-y-3">
             <div className="header flex gap-2 items-baseline md:gap-4">
                 <h1 className="text-sm font-bold sm:text-base md:text-xl">{title}</h1>
-                <p className="cursor-pointer w-fit text-cyan-800 text-xs hover:underline hover:text-orange-700 md:text-sm">
+                <a href={buttonUrl} className="cursor-pointer w-fit text-cyan-800 text-xs hover:underline hover:text-orange-700 md:text-sm">
                     {buttonName}
-                </p>
+                </a>
             </div>
 
             <Swiper
@@ -84,10 +81,11 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 {allProductsData.map((product, index) => (
                     <SwiperSlide key={index} style={{width: "auto"}}>
                         <Slide
-                            image={product.imageUrl}
-                            off={product.off}
-                            offerName={product.offerName}
-                            productTitle={product?.productTitle}
+                            image="https://m.media-amazon.com/images/I/31NDLo8vP7L._AC_SY200_.jpg"
+                            off={product.discount_percentage}
+                            offerName="in offer"
+                            productTitle={product?.name}
+                            slug={product?.slug}
                         />
                     </SwiperSlide>
                 ))}

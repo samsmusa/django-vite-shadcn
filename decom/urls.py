@@ -29,4 +29,5 @@ urlpatterns = [
 
 	path('api/', include('ecommerce.urls')),
 	path('api/', include('account.urls')),
+	path("", include("app.urls")),
 ]
