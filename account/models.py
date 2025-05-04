@@ -75,13 +75,12 @@ class Vendor(models.Model):
 
 class StoreManager(models.Model):
 	vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='managers')
-	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='store_manager_profile')
+	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='store_manager_profile', unique=True)
 	can_manage_products = models.BooleanField(default=True)
 	can_manage_orders = models.BooleanField(default=True)
 	assigned_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta:
-		unique_together = ('vendor', 'user')
 		ordering = ['-assigned_at']
 
 	def __str__(self):

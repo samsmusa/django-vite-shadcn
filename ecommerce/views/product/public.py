@@ -5,10 +5,10 @@ from rest_framework.permissions import AllowAny
 
 import ecommerce.serializers.product.public as public_product_serializer
 from ecommerce.filters.product import ProductFilter
-from ecommerce.models import Product, Cart, CartItem, WishlistItem, Wishlist
+from ecommerce.models import Product, Cart, CartItem, WishlistItem, Wishlist, ProductReview
 
 
-@extend_schema(tags=["Products"])
+@extend_schema(tags=["public-product"])
 class PublicProductViewSet(viewsets.ReadOnlyModelViewSet):
 	queryset = Product.objects.all()
 	serializer_class = public_product_serializer.ProductSerializer
@@ -24,39 +24,14 @@ class PublicProductViewSet(viewsets.ReadOnlyModelViewSet):
 			return public_product_serializer.ProductDetailSerializer
 
 
-@extend_schema(tags=["Cart"])
-class PublicCartViewSet(viewsets.ReadOnlyModelViewSet):
-	queryset = Cart.objects.all()
-	serializer_class = public_product_serializer.CartSerializer
+@extend_schema(tags=["public-product"])
+class PublicProductReviewViewSet(viewsets.ReadOnlyModelViewSet):
+	queryset = ProductReview.objects.all()
+	serializer_class = public_product_serializer.ProductReviewSerializer
 	permission_classes = [AllowAny]
 	lookup_field = 'pk'
 	filter_backends = [DjangoFilterBackend]
 
 
-@extend_schema(tags=["Cart"])
-class PublicCartItemViewSet(viewsets.ReadOnlyModelViewSet):
-	serializer_class = public_product_serializer.CartItemSerializer
-	permission_classes = [AllowAny]
-	filter_backends = [DjangoFilterBackend]
-
 	def get_queryset(self):
-		return CartItem.objects.filter(cart_id=self.kwargs['cart_pk'])
-
-
-@extend_schema(tags=["Wish"])
-class PublicWishViewSet(viewsets.ReadOnlyModelViewSet):
-	queryset = Wishlist.objects.all()
-	serializer_class = public_product_serializer.WishSerializer
-	permission_classes = [AllowAny]
-	lookup_field = 'pk'
-	filter_backends = [DjangoFilterBackend]
-
-
-@extend_schema(tags=["Wish"])
-class PublicWishListItemViewSet(viewsets.ReadOnlyModelViewSet):
-	serializer_class = public_product_serializer.WishItemSerializer
-	permission_classes = [AllowAny]
-	filter_backends = [DjangoFilterBackend]
-
-	def get_queryset(self):
-		return WishlistItem.objects.filter(wishlist_id=self.kwargs['wish_pk'])
+		return ProductReview.objects.filter(product__id=self.kwargs['product_pk'])

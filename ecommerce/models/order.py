@@ -65,7 +65,7 @@ class OrderItem(models.Model):
 	order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
 	product = models.ForeignKey(Product, on_delete=models.PROTECT)
 	variant = models.ForeignKey(ProductVariant, on_delete=models.PROTECT, blank=True, null=True)
-	product_name = models.CharField(max_length=255)  # Snapshot of product name at order time
+	product_name = models.CharField(max_length=255)  # Snapshot of the product name at order time
 	variant_name = models.CharField(max_length=255, blank=True, null=True)  # Snapshot of variant name
 	sku = models.CharField(max_length=50)  # Snapshot of SKU at order time
 	price = models.DecimalField(max_digits=10, decimal_places=2)  # Snapshot of price at order time

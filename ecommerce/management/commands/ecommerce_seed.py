@@ -315,25 +315,25 @@ class Command(BaseCommand):
 
 			# Create shipping rates for each method in this zone
 			for method in ShippingMethod.objects.all():
-				base_rate = float(method.base_price)
+				base_rate = decimal.Decimal(method.base_price)
 
 				# Adjust rate based on zone
 				if zone.name == 'North America':
-					multiplier = 1.5
+					multiplier = decimal.Decimal("1.5")
 				elif zone.name == 'Europe':
-					multiplier = 2.0
+					multiplier = decimal.Decimal("2.0")
 				elif zone.name == 'Rest of World':
-					multiplier = 2.5
+					multiplier = decimal.Decimal("2.5")
 				else:
-					multiplier = 1.0
+					multiplier = decimal.Decimal("1.0")
 
 				# Create weight brackets
 				weight_brackets = [
 					(0, 1, base_rate * multiplier),
-					(1, 5, base_rate * multiplier * 1.5),
-					(5, 10, base_rate * multiplier * 2),
-					(10, 20, base_rate * multiplier * 3),
-					(20, 50, base_rate * multiplier * 4),
+					(1, 5, base_rate * multiplier * decimal.Decimal("1.5")),
+					(5, 10, base_rate * multiplier * decimal.Decimal("2")),
+					(10, 20, base_rate * multiplier * decimal.Decimal("3")),
+					(20, 50, base_rate * multiplier * decimal.Decimal("4")),
 				]
 
 				for min_w, max_w, rate in weight_brackets:
