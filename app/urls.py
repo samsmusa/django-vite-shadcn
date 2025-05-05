@@ -13,7 +13,7 @@ urlpatterns = [
 	path('sync/', views.sync_view),
 	path('async/', views.async_view),
 	path('add/', views.add_view),
-	path('product/<str:product_id>/', views.product_detail_view, name='product_detail'),
+	path('product/<slug:slug>/', views.product_detail_view, name='product_detail'),
 	path('category/<slug:category_slug>/', views.category_product_list, name='category_products'),
 	path("invoice/", views.invoice_view, name="invoice"),
 ]

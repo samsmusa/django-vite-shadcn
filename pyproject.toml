@@ -17,6 +17,7 @@ dependencies = [
     "drf-nested-routers>=0.94.1",
     "drf-spectacular>=0.28.0",
     "faker>=37.1.0",
+    "fontawesomefree>=6.6.0",
     "ipython>=9.2.0",
     "locust>=2.36.2",
     "pillow>=11.2.1",

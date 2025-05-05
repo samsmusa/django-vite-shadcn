@@ -13,8 +13,9 @@ module.exports = {
     },
     extend: {
     fontFamily: {
-      sans: ['Averta Std', 'ui-sans-serif', 'system-ui'],
-    },
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        heading: ['Poppins', 'ui-sans-serif', 'system-ui'], // Optional
+      },
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",

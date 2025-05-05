@@ -5,8 +5,6 @@
 <html lang="en" class="{{ request.COOKIES.theme|default:'light' }}">
 <head>
     <title>{% block title %}Django React App{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
 
     <script>
         (function () {
@@ -25,10 +23,13 @@
         })();
     </script>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <link rel="stylesheet" href="{% static 'css/vendors.css' %}">
+    <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
     {% tailwind_css %}
     <script src="{% static 'js/custom.js' %}"></script>
     {% block extra_css %}{% endblock %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 {% block content %}{% endblock %}

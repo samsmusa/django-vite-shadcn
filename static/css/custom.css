@@ -1,0 +1,17 @@
+.swiper-slide-fully-visible {
+    width: 20%;
+    height: 100%;
+    opacity: 0.3;
+    margin-top: 20px;
+
+}
+.swiper-slide-fully-visible img {
+    border: 2px black solid;
+    border-radius: 10px;
+
+}
+
+.swiper-slide-thumb-active {
+    opacity: 1;
+}
+
