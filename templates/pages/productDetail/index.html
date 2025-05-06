@@ -75,28 +75,28 @@
 
                     <!-- Buttons -->
                     <div class="py-6 flex flex-col gap-4 items-center md:flex-row">
-    <!-- Add to Cart Button -->
-    <form method="post" class="w-full md:w-auto">
-        {% csrf_token %}
-        <button
-            type="submit"
-            class="w-full md:w-[220px] px-6 py-3 bg-white border border-yellow-400 text-yellow-600 font-medium rounded-full shadow-sm hover:bg-yellow-50 hover:shadow-md active:scale-95 transition-all duration-300"
-        >
-            Add to Cart
-        </button>
-    </form>
+                        <!-- Add to Cart Button -->
+                        <form method="post" class="w-full md:w-auto">
+                            {% csrf_token %}
+                            <button
+                                    type="submit"
+                                    class="w-full md:w-[220px] px-6 py-3 bg-white border border-yellow-400 text-yellow-600 font-medium rounded-full shadow-sm hover:bg-yellow-50 hover:shadow-md active:scale-95 transition-all duration-300"
+                            >
+                                Add to Cart
+                            </button>
+                        </form>
 
-    <!-- Buy Now Button -->
-    <form method="post" class="w-full md:w-auto">
-        {% csrf_token %}
-        <button
-            type="submit"
-            class="w-full md:w-[220px] px-6 py-3 bg-yellow-500 text-white font-semibold rounded-full shadow hover:shadow-lg hover:bg-yellow-600 active:scale-95 transition-all duration-300"
-        >
-            Buy Now
-        </button>
-    </form>
-</div>
+                        <!-- Buy Now Button -->
+                        <form method="post" class="w-full md:w-auto">
+                            {% csrf_token %}
+                            <button
+                                    type="submit"
+                                    class="w-full md:w-[220px] px-6 py-3 bg-yellow-500 text-white font-semibold rounded-full shadow hover:shadow-lg hover:bg-yellow-600 active:scale-95 transition-all duration-300"
+                            >
+                                Buy Now
+                            </button>
+                        </form>
+                    </div>
 
                 </section>
             </div>
@@ -118,11 +118,8 @@
             </section>
 
             <!-- Customer Reviews -->
-            <section class="px-4 md:px-10 py-6 border-t">
-                <h2 class="text-xl font-semibold mb-4">Customer Reviews</h2>
-                <div id="details-product-review" data-user="{{ request.user }}" data-product-slug="{{ product.slug }}"
-                     data-product-id="{{ product.id }}"></div>
-            </section>
+            <div id="details-product-review" data-user="{{ request.user }}" data-product-slug="{{ product.slug }}"
+                 data-product-id="{{ product.id }}"></div>
 
             <!-- Frequently Bought Together -->
             <section class="px-4 md:px-10 py-6 border-t">
@@ -159,4 +156,5 @@
     <script src="{% static 'js/detailspageimageslider.bundle.js' %}"></script>
     <script src="{% static 'js/detailspageproductvariant.bundle.js' %}"></script>
     <script src="{% static 'js/detailspageproductdiscount.bundle.js' %}"></script>
+    <script src="{% static 'js/detailspageproductreview.bundle.js' %}"></script>
 {% endblock %}
