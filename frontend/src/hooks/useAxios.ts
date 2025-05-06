@@ -412,7 +412,7 @@ export interface UseAxiosReturn<T = any> extends AxiosState<T> {
         url: string,
         params?: Record<string, any>,
         config?: AxiosRequestConfig
-    ) => Promise<PaginatedResponse<T>>;
+    ) => Promise<T>;
     get: <R = T>(
         url: string,
         params?: Record<string, any>,
@@ -525,8 +525,8 @@ const useAxios = <T = any>(options: UseAxiosOptions<T> = {}): UseAxiosReturn<T> 
             url: string,
             params: Record<string, any> = {},
             config: AxiosRequestConfig = {}
-        ): Promise<PaginatedResponse<T>> => {
-            return requestWrapper<PaginatedResponse<T>>('get', url, params, config);
+        ): Promise<T> => {
+            return requestWrapper<T>('get', url, params, config);
         },
         [requestWrapper]
     );

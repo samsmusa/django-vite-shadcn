@@ -187,7 +187,7 @@ class ProductReview(TimeStampedMixin):
 	is_approved = models.BooleanField(default=False)
 
 	class Meta:
-		unique_together = ('product', 'user')
+		# unique_together = ('product', 'user')
 		ordering = ['-created_at']
 
 	def __str__(self):
