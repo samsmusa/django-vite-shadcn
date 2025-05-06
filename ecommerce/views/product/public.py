@@ -2,10 +2,11 @@ from django_filters.rest_framework.backends import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
-
+from django.utils import timezone
+from django.db import models
 import ecommerce.serializers.product.public as public_product_serializer
 from ecommerce.filters.product import ProductFilter
-from ecommerce.models import Product, ProductReview, ProductVariant
+from ecommerce.models import Product, ProductReview, ProductVariant, Discount
 
 
 @extend_schema(tags=["public-product"])
@@ -46,3 +47,25 @@ class PublicProductVariantViewSet(viewsets.ReadOnlyModelViewSet):
 
 	def get_queryset(self):
 		return ProductVariant.objects.prefetch_related("attributes").filter(product__id=self.kwargs['product_pk'])
+
+
+@extend_schema(tags=["public-product"])
+class PublicProductDiscountViewSet(viewsets.ReadOnlyModelViewSet):
+	queryset = Discount.objects.all()
+	serializer_class = public_product_serializer.DiscountSerializer
+	permission_classes = [AllowAny]
+	lookup_field = 'pk'
+	filter_backends = [DjangoFilterBackend]
+
+	def get_queryset(self):
+		product_id = self.kwargs['product_pk']
+		now = timezone.now()
+
+		return Discount.objects.filter(
+			applies_to_products__id=product_id,
+			is_active=True,
+			valid_from__lte=now
+		).filter(
+			models.Q(valid_to__gte=now) | models.Q(valid_to__isnull=True),
+			models.Q(usage_limit__isnull=True) | models.Q(usage_count__lt=models.F('usage_limit'))
+		).distinct()

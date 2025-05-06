@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from ecommerce.models import (
 	Product, ProductVariant, ProductImage,
-	ProductReview, Cart, CartItem, Wishlist, WishlistItem
+	ProductReview, Cart, CartItem, Wishlist, WishlistItem, Discount
 )
 from ecommerce.serializers.base.public import BrandSerializer, CategoryOnlySerializer
 
@@ -114,3 +114,9 @@ class WishItemSerializer(serializers.ModelSerializer):
 			'id', 'product', 'variant', 'created_at'
 		]
 		read_only_fields = ['updated_at', 'created_at']
+
+
+class DiscountSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Discount
+		fields = ["id", "name", "value", "discount_type", "maximum_discount_amount", "valid_from", "valid_to", "minimum_order_amount"]

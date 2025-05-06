@@ -191,3 +191,6 @@ def invoice_view(request):
 	}
 
 	return render(request, "pages/invoice/index.html", {"order": order})
+
+def products_page(request):
+	return render(request, "pages/productCollections/index.html")
