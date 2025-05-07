@@ -10,16 +10,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/lib/utils.ts":
-/*!**************************!*\
-  !*** ./src/lib/utils.ts ***!
-  \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   cn: () => (/* binding */ cn),\n/* harmony export */   humanizeTime: () => (/* binding */ humanizeTime)\n/* harmony export */ });\n/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! clsx */ \"./node_modules/clsx/dist/clsx.mjs\");\n/* harmony import */ var tailwind_merge__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tailwind-merge */ \"./node_modules/tailwind-merge/dist/bundle-mjs.mjs\");\n\n\nfunction cn() {\n    var inputs = [];\n    for (var _i = 0; _i < arguments.length; _i++) {\n        inputs[_i] = arguments[_i];\n    }\n    return (0,tailwind_merge__WEBPACK_IMPORTED_MODULE_1__.twMerge)((0,clsx__WEBPACK_IMPORTED_MODULE_0__.clsx)(inputs));\n}\nfunction humanizeTime(timestamp) {\n    if (!timestamp || timestamp.toLowerCase() === 'unknown') {\n        return 'unknown time';\n    }\n    var time = new Date(timestamp);\n    if (isNaN(time.getTime())) {\n        return 'invalid time';\n    }\n    var now = new Date();\n    var diffMs = now.getTime() - time.getTime();\n    var seconds = Math.floor(diffMs / 1000);\n    var minutes = Math.floor(seconds / 60);\n    var hours = Math.floor(minutes / 60);\n    var days = Math.floor(hours / 24);\n    if (seconds < 60)\n        return \"just now\";\n    if (minutes < 60)\n        return \"\".concat(minutes, \" minute\").concat(minutes !== 1 ? 's' : '', \" ago\");\n    if (hours < 24)\n        return \"\".concat(hours, \" hour\").concat(hours !== 1 ? 's' : '', \" ago\");\n    if (days < 7)\n        return \"\".concat(days, \" day\").concat(days !== 1 ? 's' : '', \" ago\");\n    return time.toLocaleDateString();\n}\n\n\n//# sourceURL=webpack://frontend/./src/lib/utils.ts?");
-
-/***/ }),
-
 /***/ "./src/pageComponents/DetailsPageProductReview/index.tsx":
 /*!***************************************************************!*\
   !*** ./src/pageComponents/DetailsPageProductReview/index.tsx ***!

@@ -3,27 +3,30 @@ import json
 import time
 from datetime import date
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 
-from ecommerce.models import Product
+from ecommerce.models import Product, Order, Cart
 
 
 #
-# class DiscountViewSet(viewsets.ModelViewSet):
-# 	queryset = Discount.objects.all()
-# 	serializer_class = DiscountSerializer
+
+
+
 #
-# 	@action(detail=False, methods=['get'], url_path='by-name/(?P<name>[^/.]+)')
-# 	def get_by_name(self, request, name=None):
-# 		try:
-# 			discount = Discount.objects.get(name=name)
-# 			serializer = self.get_serializer(discount)
-# 			return Response(serializer.data)
-# 		except Discount.DoesNotExist:
-# 			return Response({'detail': 'Discount not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+
+
+
 
 
 def home_view(request):
@@ -95,35 +98,35 @@ def add_view(request):
 	return JsonResponse({"result": a + b})
 
 
-# def expensive_products_view(request):
-# 	cache_key = 'top_expensive_products'
-# 	data = cache.get(cache_key)
+
+
+
 #
-# 	if not data:
-# 		start = time.time()
-# 		data = list(Product.objects.filter(in_stock=True).order_by('-price')[:1000].values())
-# 		cache.set(cache_key, data, timeout=60 * 10)  # cache for 10 minutes
-# 		print(f"Queried DB in {time.time() - start:.2f}s")
-# 	else:
-# 		print("Cache hit!")
+
+
+
+
+
+
+
 #
-# 	return JsonResponse(data, safe=False)
+
 #
 #
-# class ExpensiveProductView(APIView):
-# 	def get(self, request):
-# 		cache_key = "api:expensive_products"
-# 		cached_data = cache.get(cache_key)
+
+
+
+
 #
-# 		if cached_data:
-# 			return Response(cached_data, status=200)
+
+
 #
-# 		# Simulate expensive DB operation
-# 		products = Product.objects.filter(in_stock=True).order_by("-price")[:500]
-# 		data = ProductSerializer(products, many=True).data
-# 		cache.set(cache_key, data, timeout=600)  # Cache for 10 minutes
+
+
+
+
 #
-# 		return Response(data, status=200)
+
 
 @require_GET
 def product_detail_view(request, slug):
@@ -139,14 +142,65 @@ def product_detail_view(request, slug):
 	})
 
 
+@require_GET
+@login_required
+@transaction.atomic
+def order_cart(request, slug):
+	product = get_object_or_404(Product, slug=slug)
+	try:
+		quantity = int(request.GET.get('quantity', 1))
+		if quantity <= 0:
+			raise ValueError("Quantity must be positive")
+	except (ValueError, TypeError):
+		messages.error(request, "Invalid quantity selected.")
+		return redirect('product_detail', slug=slug)
+
+
+	if not request.session.session_key:
+		request.session.save()
+
+	cart_filter = {'user': request.user} if request.user.is_authenticated else {
+		'session_id': request.session.session_key}
+	cart, created = Cart.objects.get_or_create(**cart_filter)
+
+
+	cart.items.all().delete()
+
+
+	item, item_created = cart.items.get_or_create(product=product, defaults={'quantity': quantity})
+	if not item_created:
+		item.quantity += quantity
+		item.save()
+
+	messages.success(request, f"{product.name} added to your cart for checkout.")
+	return redirect('cart_checkout')
+
+
+@require_GET
+@login_required
+@transaction.atomic
+def order_review(request, slug):
+	product = get_object_or_404(Product, slug=slug)
+	try:
+		quantity = int(request.GET.get('quantity', 1))
+		if quantity <= 0:
+			raise ValueError("Quantity must be positive")
+	except (ValueError, TypeError):
+		messages.error(request, "Invalid quantity selected.")
+		return redirect('product_detail', slug=slug)
+
+	messages.success(request, f"{product.name} added to your cart for checkout.")
+	return redirect('cart_checkout')
+
+
 def category_product_list(request, category_slug):
-	# Mock category data
+
 	category = {
 		'name': category_slug.replace('-', ' ').title(),
 		'slug': category_slug
 	}
 
-	# Mock product data
+
 	sub_categories = [
 		{
 			'name': 'Wireless Mouse',
@@ -192,5 +246,207 @@ def invoice_view(request):
 
 	return render(request, "pages/invoice/index.html", {"order": order})
 
+
 def products_page(request):
 	return render(request, "pages/productCollections/index.html")
+
+
+class CheckoutMixin:
+	"""Mixin to provide common checkout functionality"""
+
+	def get_cart_items(self, request):
+		"""Helper method to get cart items from session"""
+		cart = request.session.get('cart', {})
+		cart_items = []
+		cart_total = 0
+
+		for product_id, quantity in cart.items():
+			product = get_object_or_404(Product, id=product_id)
+			subtotal = product.price * quantity
+			cart_total += subtotal
+
+			cart_items.append({
+				'product': product,
+				'quantity': quantity,
+				'subtotal': subtotal
+			})
+
+		return cart_items, cart_total
+
+	def clear_cart(self, request):
+		"""Helper method to clear the cart after order completion"""
+		if 'cart' in request.session:
+			del request.session['cart']
+			request.session.modified = True
+
+
+@login_required
+def cart_view(request):
+	"""View function to display the shopping cart"""
+	cart_mixin = CheckoutMixin()
+	cart_items, cart_total = cart_mixin.get_cart_items(request)
+
+	context = {
+		'cart_items': cart_items,
+		'cart_total': cart_total,
+	}
+
+	return render(request, 'shop/cart.html', context)
+
+
+@require_POST
+def add_to_cart(request, product_slug):
+	"""Add a product to the cart"""
+	product = get_object_or_404(Product, slug=product_slug)
+	quantity = int(request.POST.get('quantity', 1))
+
+
+	if 'cart' not in request.session:
+		request.session['cart'] = {}
+
+	cart = request.session['cart']
+	product_id = str(product.id)
+
+
+	if product_id in cart:
+		cart[product_id] += quantity
+	else:
+		cart[product_id] = quantity
+
+	request.session.modified = True
+	messages.success(request, f"Added {product.name} to your cart.")
+
+
+	return redirect('product_detail', slug=product_slug)
+
+
+@require_POST
+def update_cart(request):
+	"""Update cart quantities via AJAX"""
+	product_id = request.POST.get('product_id')
+	quantity = int(request.POST.get('quantity', 1))
+
+	if not product_id:
+		return JsonResponse({'status': 'error', 'message': 'Product ID required'})
+
+	if 'cart' not in request.session:
+		return JsonResponse({'status': 'error', 'message': 'Cart is empty'})
+
+	cart = request.session['cart']
+
+	if product_id in cart:
+		if quantity > 0:
+			cart[product_id] = quantity
+		else:
+			del cart[product_id]
+
+		request.session.modified = True
+
+
+		cart_mixin = CheckoutMixin()
+		_, cart_total = cart_mixin.get_cart_items(request)
+
+		return JsonResponse({
+			'status': 'success',
+			'cart_total': cart_total,
+			'message': 'Cart updated successfully'
+		})
+
+	return JsonResponse({'status': 'error', 'message': 'Product not in cart'})
+
+
+@require_POST
+def remove_from_cart(request, product_id):
+	"""Remove an item from the cart"""
+	if 'cart' in request.session and product_id in request.session['cart']:
+		del request.session['cart'][product_id]
+		request.session.modified = True
+		messages.success(request, "Item removed from cart.")
+
+	return redirect('cart')
+
+
+
+
+@login_required
+def order_review(request):
+	"""View function to review order before final submission"""
+	cart_mixin = CheckoutMixin()
+	cart_items, cart_total = cart_mixin.get_cart_items(request)
+
+	if not cart_items:
+		messages.warning(request, "Your cart is empty!")
+		return redirect('cart')
+
+
+	shipping_data = request.session.get('shipping_data', {})
+
+
+	shipping_cost = 50.00
+	tax = cart_total * 0.18
+	order_total = cart_total + shipping_cost + tax
+
+	context = {
+		'cart_items': cart_items,
+		'cart_total': cart_total,
+		'shipping_cost': shipping_cost,
+		'tax': tax,
+		'order_total': order_total,
+		'shipping_data': shipping_data,
+	}
+
+	return render(request, 'shop/order_review.html', context)
+
+
+
+
+
+@login_required
+def order_confirmation(request, order_id):
+	"""View function to display order confirmation page"""
+	order = get_object_or_404(Order, id=order_id, user=request.user)
+
+	context = {
+		'order': order,
+		'order_items': order.orderitem_set.all(),
+	}
+
+	return render(request, 'shop/order_confirmation.html', context)
+
+
+@login_required
+def buy_now(request, product_slug):
+	"""View function for direct purchase of a product"""
+	product = get_object_or_404(Product, slug=product_slug)
+
+
+	request.session['cart'] = {str(product.id): 1}
+	request.session.modified = True
+
+	messages.info(request, f"Proceeding to checkout with {product.name}")
+	return redirect('checkout')
+
+
+@login_required
+def order_history(request):
+	"""View function to display user's order history"""
+	orders = Order.objects.filter(user=request.user).order_by('-created_at')
+
+	context = {
+		'orders': orders,
+	}
+
+	return render(request, 'shop/order_history.html', context)
+
+
+@login_required
+def order_detail(request, order_id):
+	"""View function to display details of a specific order"""
+	order = get_object_or_404(Order, id=order_id, user=request.user)
+
+	context = {
+		'order': order,
+		'order_items': order.orderitem_set.all(),
+	}
+
+	return render(request, 'shop/order_detail.html', context)

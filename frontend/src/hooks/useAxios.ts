@@ -380,6 +380,7 @@ import axios, {
     AxiosResponse,
     AxiosError,
 } from 'axios';
+import {getCsrfToken} from "@/lib/utils";
 
 // Optional config when creating Axios instance
 export interface UseAxiosOptions<T = any> {
@@ -444,7 +445,7 @@ export interface UseAxiosReturn<T = any> extends AxiosState<T> {
 const useAxios = <T = any>(options: UseAxiosOptions<T> = {}): UseAxiosReturn<T> => {
     const axiosInstance = axios.create({
         baseURL: options.baseURL || '',
-        headers: options.headers || { 'Content-Type': 'application/json' },
+        headers: options.headers || { 'Content-Type': 'application/json', "X-CSRFToken": getCsrfToken() },
         timeout: options.timeout || 30000,
         withCredentials: options.withCredentials || false,
     });

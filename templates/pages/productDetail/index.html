@@ -87,7 +87,7 @@
                         </form>
 
                         <!-- Buy Now Button -->
-                        <form method="post" action="{% url 'buy_now' product.slug %}" class="w-full md:w-auto">
+                        <form method="post" class="w-full md:w-auto">
                             {% csrf_token %}
                             <button
                                     type="submit"
