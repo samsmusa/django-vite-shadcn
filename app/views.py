@@ -3,30 +3,36 @@ import json
 import time
 from datetime import date
 
+from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
+from django.views.generic import CreateView
 
+from account.models import User
 from ecommerce.models import Product, Order, Cart
 
 
-#
+class CustomUserCreationForm(UserCreationForm):
+	email = forms.EmailField(required=True)
+	first_name = forms.CharField(max_length=30, required=False)
+	last_name = forms.CharField(max_length=30, required=False)
+
+	class Meta:
+		model = User
+		fields = ("username", "email", "first_name", "last_name", "password1", "password2")
 
 
-
-#
-
-
-
-
-
-
-
-
+class SignUpView(CreateView):
+	form_class = CustomUserCreationForm
+	success_url = reverse_lazy("login")
+	template_name = "registration/signup.html"
 
 
 def home_view(request):
@@ -98,36 +104,6 @@ def add_view(request):
 	return JsonResponse({"result": a + b})
 
 
-
-
-
-#
-
-
-
-
-
-
-
-#
-
-#
-#
-
-
-
-
-#
-
-
-#
-
-
-
-
-#
-
-
 @require_GET
 def product_detail_view(request, slug):
 	product = get_object_or_404(
@@ -155,7 +131,6 @@ def order_cart(request, slug):
 		messages.error(request, "Invalid quantity selected.")
 		return redirect('product_detail', slug=slug)
 
-
 	if not request.session.session_key:
 		request.session.save()
 
@@ -163,9 +138,7 @@ def order_cart(request, slug):
 		'session_id': request.session.session_key}
 	cart, created = Cart.objects.get_or_create(**cart_filter)
 
-
 	cart.items.all().delete()
-
 
 	item, item_created = cart.items.get_or_create(product=product, defaults={'quantity': quantity})
 	if not item_created:
@@ -194,12 +167,10 @@ def order_review(request, slug):
 
 
 def category_product_list(request, category_slug):
-
 	category = {
 		'name': category_slug.replace('-', ' ').title(),
 		'slug': category_slug
 	}
-
 
 	sub_categories = [
 		{
@@ -300,13 +271,11 @@ def add_to_cart(request, product_slug):
 	product = get_object_or_404(Product, slug=product_slug)
 	quantity = int(request.POST.get('quantity', 1))
 
-
 	if 'cart' not in request.session:
 		request.session['cart'] = {}
 
 	cart = request.session['cart']
 	product_id = str(product.id)
-
 
 	if product_id in cart:
 		cart[product_id] += quantity
@@ -315,7 +284,6 @@ def add_to_cart(request, product_slug):
 
 	request.session.modified = True
 	messages.success(request, f"Added {product.name} to your cart.")
-
 
 	return redirect('product_detail', slug=product_slug)
 
@@ -342,7 +310,6 @@ def update_cart(request):
 
 		request.session.modified = True
 
-
 		cart_mixin = CheckoutMixin()
 		_, cart_total = cart_mixin.get_cart_items(request)
 
@@ -366,8 +333,6 @@ def remove_from_cart(request, product_id):
 	return redirect('cart')
 
 
-
-
 @login_required
 def order_review(request):
 	"""View function to review order before final submission"""
@@ -378,9 +343,7 @@ def order_review(request):
 		messages.warning(request, "Your cart is empty!")
 		return redirect('cart')
 
-
 	shipping_data = request.session.get('shipping_data', {})
-
 
 	shipping_cost = 50.00
 	tax = cart_total * 0.18
@@ -396,9 +359,6 @@ def order_review(request):
 	}
 
 	return render(request, 'shop/order_review.html', context)
-
-
-
 
 
 @login_required
@@ -419,12 +379,11 @@ def buy_now(request, product_slug):
 	"""View function for direct purchase of a product"""
 	product = get_object_or_404(Product, slug=product_slug)
 
-
 	request.session['cart'] = {str(product.id): 1}
 	request.session.modified = True
 
 	messages.info(request, f"Proceeding to checkout with {product.name}")
-	return redirect('checkout')
+	return render(request, 'pages/order/index.html', {})
 
 
 @login_required

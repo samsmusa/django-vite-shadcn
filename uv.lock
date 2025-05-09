@@ -55,6 +55,7 @@ dependencies = [
     { name = "django-redis" },
     { name = "django-rest-framework" },
     { name = "django-tailwind" },
+    { name = "django-widget-tweaks" },
     { name = "djangorestframework" },
     { name = "drf-nested-routers" },
     { name = "drf-spectacular" },
@@ -75,6 +76,7 @@ requires-dist = [
     { name = "django-redis", specifier = ">=5.4.0" },
     { name = "django-rest-framework", specifier = ">=0.1.0" },
     { name = "django-tailwind", specifier = ">=4.0.1" },
+    { name = "django-widget-tweaks", specifier = ">=1.5.0" },
     { name = "djangorestframework", specifier = ">=3.16.0" },
     { name = "drf-nested-routers", specifier = ">=0.94.1" },
     { name = "drf-spectacular", specifier = ">=0.28.0" },
@@ -381,6 +383,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e5/14/33694e3e5ac431991b7ea2eefe8d2460a7e555f2d6e6a4b4780e718c54d9/django_tailwind-4.0.1.tar.gz", hash = "sha256:e1f411246208056e8903f304f80a548eac2e5a3c4b6c4adb14eff21ac2dfdd6d", size = 9911, upload_time = "2025-04-02T20:04:04.068Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cd/8f/7a651007ab9bf552221ae8adc9305c7d21113a9814eb38153b5fdb4ef5eb/django_tailwind-4.0.1-py3-none-any.whl", hash = "sha256:33e5dd5aadd5aa6facf4bddab9144a40cb501e486d4970b93e2853dbdbef4f67", size = 16714, upload_time = "2025-04-02T20:04:03.038Z" },
+]
+
+[[package]]
+name = "django-widget-tweaks"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a5/fe/26eb92fba83844e71bbec0ced7fc2e843e5990020e3cc676925204031654/django-widget-tweaks-1.5.0.tar.gz", hash = "sha256:1c2180681ebb994e922c754804c7ffebbe1245014777ac47897a81f57cc629c7", size = 14767, upload_time = "2023-08-25T15:29:12.778Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/46/6a/6cb6deb5c38b785c77c3ba66f53051eada49205979c407323eb666930915/django_widget_tweaks-1.5.0-py3-none-any.whl", hash = "sha256:a41b7b2f05bd44d673d11ebd6c09a96f1d013ee98121cb98c384fe84e33b881e", size = 8960, upload_time = "2023-08-25T15:29:05.644Z" },
 ]
 
 [[package]]

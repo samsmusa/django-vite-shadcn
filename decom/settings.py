@@ -38,6 +38,7 @@ THIRD_PARTY_APPS = [
 	'drf_spectacular',
 	'django_filters',
 	'fontawesomefree',
+	'widget_tweaks',
 ]
 
 LOCAL_APPS = [
@@ -174,3 +175,5 @@ SPECTACULAR_SETTINGS = {
 	},
 	# OTHER SETTINGS
 }
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"

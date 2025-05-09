@@ -51,53 +51,52 @@
                     <p>Inclusive of all taxes</p>
                     <hr class="my-3"/>
 
-                    <!-- Offers -->
-                    <h4 class="flex items-center gap-3 md:gap-4 pt-2">
-                        <img class="w-6" src="{{ offer_icon_url }}" alt="Offers"/>
-                        <p class="font-bold text-base">Offers</p>
-                    </h4>
-                    <section id="details-offer-slider" class="w-full list-none flex gap-3 items-center">
-                        {% for offer in product.offers %}
-                            <div class="bg-gray-100 p-2 rounded-md text-xs">{{ offer }}</div>
-                        {% endfor %}
-                    </section>
+                    <form class="w-full md:w-auto">
+                        {% csrf_token %}
 
-                    <hr class="my-3"/>
+                        <!-- Offers -->
+                        <h4 class="flex items-center gap-3 md:gap-4 pt-2">
+                            <img class="w-6" src="{{ offer_icon_url }}" alt="Offers"/>
+                            <p class="font-bold text-base">Offers</p>
+                        </h4>
+                        <section id="details-offer-slider" class="w-full list-none flex gap-3 items-center">
+                            {% for offer in product.offers %}
+                                <div class="bg-gray-100 p-2 rounded-md text-xs">{{ offer }}</div>
+                            {% endfor %}
+                        </section>
 
-                    <!-- Benefits -->
-                    <div id="data-product-discounts" data-product-slug="{{ product.slug }}"
-                         data-product-id="{{ product.id }}"></div>
+                        <hr class="my-3"/>
 
-                    <hr class="my-3"/>
-                    <div id="data-product-variants" data-product-slug="{{ product.slug }}"
-                         data-product-id="{{ product.id }}"></div>
+                        <!-- Benefits -->
+                        <div id="data-product-discounts" data-product-slug="{{ product.slug }}"
+                             data-product-id="{{ product.id }}"></div>
 
-
-                    <!-- Buttons -->
-                    <div class="py-6 flex flex-col gap-4 items-center md:flex-row">
-                        <!-- Add to Cart Button -->
-                        <form method="post" class="w-full md:w-auto">
-                            {% csrf_token %}
+                        <hr class="my-3"/>
+                        <div id="data-product-variants" data-product-slug="{{ product.slug }}"
+                             data-product-id="{{ product.id }}" data-product-stock="{{ product.stock_quantity }}"></div>
+                        <div class="flex justify-between"></div>
+                        <hr class="my-3"/>
+                        <!-- Buttons -->
+                        <div class="py-6 flex flex-col gap-4 items-center md:flex-row">
+                            <!-- Add to Cart Button -->
                             <button
                                     type="submit"
                                     class="w-full md:w-[220px] px-6 py-3 bg-white border border-yellow-400 text-yellow-600 font-medium rounded-full shadow-sm hover:bg-yellow-50 hover:shadow-md active:scale-95 transition-all duration-300"
                             >
                                 Add to Cart
                             </button>
-                        </form>
 
-                        <!-- Buy Now Button -->
-                        <form method="post" class="w-full md:w-auto">
-                            {% csrf_token %}
+                            <!-- Buy Now Button -->
                             <button
                                     type="submit"
                                     class="w-full md:w-[220px] px-6 py-3 bg-yellow-500 text-white font-semibold rounded-full shadow hover:shadow-lg hover:bg-yellow-600 active:scale-95 transition-all duration-300"
                             >
                                 Buy Now
                             </button>
-                        </form>
-                    </div>
 
+                        </div>
+
+                    </form>
                 </section>
             </div>
 
@@ -158,4 +157,120 @@
     <script src="{% static 'js/detailspageproductvariant.bundle.js' %}"></script>
     <script src="{% static 'js/detailspageproductdiscount.bundle.js' %}"></script>
     <script src="{% static 'js/detailspageproductreview.bundle.js' %}"></script>
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+                const sessionId = getCookie('sessionid');
+                const form = document.querySelector('form');
+                const addToCartBtn = form.querySelector('button[type="submit"]:first-child');
+                const buyNowBtn = form.querySelector('button[type="submit"]:last-child');
+
+                addToCartBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    handleFormAddCartAction('add_to_cart');
+                });
+
+                buyNowBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    handleFormBuyNowAction('buy_now');
+                });
+
+                async function handleFormAddCartAction(action) {
+                    const productId = document.getElementById('details-product-images').dataset.productId;
+                    const csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+
+                    const sessionId = getCookie('sessionid');
+                    const formData = new FormData(form);
+                    const formFields = {};
+                    formData.forEach((value, key) => {
+                        formFields[key] = value;
+                    });
+                    console.log(formFields);
+
+                    try {
+                        const response = await fetch('/api/cart-action/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
+                            },
+                            body: JSON.stringify({
+                                product_id: productId,
+                                action: action
+                            }),
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            if (action === 'add_to_cart') {
+                                alert('Product added to cart!');
+                            } else if (action === 'buy_now') {
+                                window.location.href = '/checkout/';
+                            }
+                        } else {
+                            alert(data.error || 'Something went wrong!');
+                        }
+                    } catch (error) {
+                        console.error('Form submission error:', error);
+                        alert('Network error occurred!');
+                    }
+                }
+
+                async function handleFormBuyNowAction(action) {
+                    const productId = document.getElementById('details-product-images').dataset.productId;
+                    const csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+
+                    const sessionId = getCookie('sessionid');
+                    const formData = new FormData(form);
+                    const formFields = {};
+                    formData.forEach((value, key) => {
+                        formFields[key] = value;
+                    });
+                    console.log(formFields);
+                    const payload = {
+                        "session_id": sessionId,
+                    }
+
+                    try {
+                        const response = await fetch('/api/private/cart/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        const cart = await response.json();
+                        const payload = {
+                            "cart": cart?.id,
+                            "product": 0,
+                            "variant": 0,
+                            "quantity": 9223372036854776000
+                        }
+                        const response = await fetch(`/api/private/cart/${cart.id}/items/`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrfToken,
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+
+                    } catch (error) {
+                        console.error('Form submission error:', error);
+                        alert('Network error occurred!');
+                    }
+                }
+            }
+        )
+    </script>
 {% endblock %}
