@@ -260,6 +260,7 @@ class Cart(TimeStampedMixin):
 	                         related_name='carts')
 	session_id = models.CharField(max_length=255, blank=True, null=True)
 	discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, blank=True, null=True)
+	is_active = models.BooleanField(default=False)
 
 	class Meta:
 		constraints = [

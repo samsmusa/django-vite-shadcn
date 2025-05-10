@@ -375,15 +375,10 @@ def order_confirmation(request, order_id):
 
 
 @login_required
-def buy_now(request, product_slug):
+def checkout(request, cart_id):
 	"""View function for direct purchase of a product"""
-	product = get_object_or_404(Product, slug=product_slug)
-
-	request.session['cart'] = {str(product.id): 1}
-	request.session.modified = True
-
-	messages.info(request, f"Proceeding to checkout with {product.name}")
-	return render(request, 'pages/order/index.html', {})
+	cart = get_object_or_404(Cart, id=cart_id, user=request.user)
+	return render(request, 'pages/order/index.html', {"cart": cart})
 
 
 @login_required
