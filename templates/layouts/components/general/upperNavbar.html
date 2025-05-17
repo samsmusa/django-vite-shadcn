@@ -1,36 +1,14 @@
 {% load static %}
 <ul class="nav px-3 py-2.5 flex flex-wrap justify-between items-center gap-4 md:gap-6 md:flex-nowrap md:px-6  whitespace-nowrap 2xl:justify-center">
     <li class="nav-item flex items-center gap-4">
-        <button
-                class="hamburger cursor-pointer text-2xl md:hidden"
-        >
-            <i class="fa-solid fa-bars"></i>
-        </button>
-        <a
-                href="/"
-                class="amazon-logo cursor-pointer mt-1 w-20 md:w-24"
-        >
-            <img class="h-full" src="https://picsum.photos/200/100" alt="amazon.in"/>
-        </a>
+        MYCOMMERCE
     </li>
     <li class="flex-1 md:hidden"></li>
     <li class="md:order-5">
-        <a href="/sign-in"
-           class="user cursor-pointer flex items-center text-xs gap-1 "
-        >
-            <span>
-              Sign in <i class="fa-solid fa-chevron-right"></i>
-            </span>
-            <span>
-              <i class="fa-regular fa-user text-xl"></i>
-            </span>
-        </a>
+        <div id="nav-user"></div>
     </li>
     <li class="cart cursor-pointer text-xl md:order-7">
-        <a href="/cart-screen">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span class="hidden md:inline text-base font-medium">Cart</span>
-        </a>
+        <div id="nav-cart"></div>
     </li>
     <li class="nav-item search flex items-center items-stretch  mx-auto w-full text-black md:order-3 md:mx-3">
         <label class="hidden" for="main-dropdown">Category</label>
@@ -90,24 +68,9 @@
 
     </li>
     <li class="nav-item country cursor-pointer flex items-center gap-2 md:order-4">
-        <div class="w-5">
+        <i class="fa-solid fa-language"></i>
+    </li>
 
-            <img
-                    class="w-full h-full"
-                    src="https://picsum.photos/200/300"
-                    alt="indian-flag"
-            />
-        </div>
-        <div class="flex items-center gap-1 font-medium">
-            EN <i class="fa-solid fa-sort-down text-xs text-gray-400"></i>
-        </div>
-    </li>
-    <li class="nav-item returns cursor-pointer md:order-6">
-        <div class="space-y-0 leading-5">
-            <div class="upper text-start text-xs">Returns</div>
-            <div class="lower font-medium">& Orders</div>
-        </div>
-    </li>
 </ul>
 
 <script>
@@ -138,3 +101,5 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 </script>
+<script src="{% static 'js/navcart.bundle.js' %}"></script>
+<script src="{% static 'js/navuser.bundle.js' %}"></script>
