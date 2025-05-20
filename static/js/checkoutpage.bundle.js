@@ -172,7 +172,8 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var reac
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"checkoutpage": 0
+/******/ 			"checkoutpage": 0,
+/******/ 			"styles": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -227,7 +228,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var reac
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors"], () => (__webpack_require__("./src/pageComponents/CheckoutPage/index.tsx")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["styles","vendors"], () => (__webpack_require__("./src/pageComponents/CheckoutPage/index.tsx")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

@@ -64,13 +64,22 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: '../css/[name].css',
+            filename: '../css/styles.css', // Single CSS file for all components
+            chunkFilename: '../css/styles.css', // Also handle chunk CSS in the same file
         }),
     ],
     optimization: {
         splitChunks: {
             chunks: 'all',
             name: 'vendors',
+            cacheGroups: {
+                styles: {
+                    name: 'styles',
+                    type: 'css/mini-extract',
+                    chunks: 'all',
+                    enforce: true,
+                },
+            },
         },
     },
 };
