@@ -3,28 +3,27 @@ import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
 import {Button} from "@/components/ui/button"
-import {DropdownMenu, DropdownMenuContent, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
-import {DropdownMenuCheckboxItemProps, Separator} from "@radix-ui/react-dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
+import {ScrollArea} from "@/components/ui/scroll-area"
 
 
 interface IProps {
+    is_authenticated: string
 }
 
-type Checked = DropdownMenuCheckboxItemProps["checked"]
 
-const Main: React.FC<IProps> = ({}) => {
-
+const Main: React.FC<IProps> = ({is_authenticated}) => {
+    const login = (String(is_authenticated).toLowerCase() === 'true');
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="link"><i className="fa-solid fa-cart-shopping"></i></Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-96">
-                <ScrollArea className="h-72 w-full m-4">
+                <ScrollArea className="h-72 w-full">
                     {Array(10).fill(1).map((_) => (
-                        <>
-                            <div className="flex justify-between space-x-4">
+                        <DropdownMenuItem>
+                            <div className="flex justify-between">
                                 <Avatar>
                                     <AvatarImage src="https://github.com/vercel.png"/>
                                     <AvatarFallback>VC</AvatarFallback>
@@ -42,8 +41,8 @@ const Main: React.FC<IProps> = ({}) => {
                                 </div>
                             </div>
 
-                            <Separator className="my-4"/>
-                        </>
+
+                        </DropdownMenuItem>
                     ))}
                 </ScrollArea>
             </DropdownMenuContent>
@@ -62,7 +61,7 @@ if (container) {
             <Hydrate<IProps>
                 component={Main}
                 containerId={containerId}
-                propNames={[]}
+                propNames={["is_authenticated"]}
             />
         </React.StrictMode>
     );

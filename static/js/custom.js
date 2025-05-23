@@ -129,3 +129,15 @@ function setGlobalColorTheme(themeMode, color) {
         document.documentElement.style.setProperty(`--${key}`, theme[key])
     }
 }
+
+function showLoginModal() {
+  const modal = document.getElementById('login-modal');
+
+  modal.classList.remove('hidden');
+
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      modal.classList.add('hidden');
+    }
+  };
+}

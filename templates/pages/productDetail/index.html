@@ -116,7 +116,7 @@
             <!-- Customer Reviews -->
             <section class="px-4 md:px-10 py-6 border-t">
                 <div id="details-product-review" data-user="{{ request.user }}" data-product-slug="{{ product.slug }}"
-                     data-product-id="{{ product.id }}"></div>
+                     data-product-id="{{ product.id }}" data-is-authenticate="{{user.is_authenticated|yesno:"true,false"}}"></div>
             </section>
             <!-- Frequently Bought Together -->
             <section class="px-4 md:px-10 py-6 border-t">
@@ -167,7 +167,8 @@
                 const form = document.querySelector('form');
                 const addToCartBtn = form.querySelector('button[type="submit"]:first-child');
                 const buyNowBtn = form.querySelector('button[type="submit"]:last-child');
-
+                const isAuthenticated = (String({{ user.is_authenticated|yesno:"true,false" }}).toLowerCase() === 'true');
+                console.log(isAuthenticated)
                 addToCartBtn.addEventListener('click', function (e) {
                     e.preventDefault();
                     handleFormAddCartAction();
@@ -175,7 +176,12 @@
 
                 buyNowBtn.addEventListener('click', function (e) {
                     e.preventDefault();
-                    handleFormBuyNowAction();
+                    if (isAuthenticated) {
+                        handleFormBuyNowAction()
+                    } else {
+                        showLoginModal()
+                    }
+
                 });
 
                 async function handleFormAddCartAction() {

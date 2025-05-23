@@ -4,10 +4,17 @@ import {createRoot} from "react-dom/client";
 import useAxios, {PaginatedResponse} from "@/hooks/useAxios";
 import {humanizeTime} from "@/lib/utils";
 import {FixedSizeList as List} from 'react-window';
+import { useForm, Controller } from 'react-hook-form';
 
+
+type ReviewFormData = {
+    rating: number;
+    description: string;
+};
 interface IProps {
     product_slug: string;
     product_id: string;
+    is_authenticated: boolean;
 }
 
 interface IProductReview {
@@ -23,14 +30,18 @@ interface IProductReview {
 }
 
 
-const StarRating: React.FC = () => {
+type StarRatingProps = {
+    value: number;
+    onChange: (value: number) => void;
+};
+
+const StarRating: React.FC<StarRatingProps> = ({ value, onChange }) => {
     const [hovered, setHovered] = useState<number>(0);
-    const [rating, setRating] = useState<number>(0);
 
     const handleMouseEnter = (index: number) => setHovered(index);
     const handleMouseLeave = () => setHovered(0);
     const handleClick = (index: number) => {
-        setRating(index);
+        onChange(index);
         console.log("Selected:", index);
     };
 
@@ -41,7 +52,7 @@ const StarRating: React.FC = () => {
                     <i
                         key={star}
                         className={`fa-solid fa-star cursor-pointer text-2xl transition ${
-                            (hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"
+                            (hovered || value) >= star ? "text-yellow-400" : "text-gray-300"
                         }`}
                         onMouseEnter={() => handleMouseEnter(star)}
                         onMouseLeave={handleMouseLeave}
@@ -49,8 +60,8 @@ const StarRating: React.FC = () => {
                     />
                 ))}
                 <span className="ms-2 text-lg font-bold text-gray-900 dark:text-white">
-          {rating ? `${rating}.0 out of 5` : "Rate this"}
-        </span>
+                    {value ? `${value}.0 out of 5` : "Rate this"}
+                </span>
             </div>
         </div>
     );
@@ -87,10 +98,91 @@ const UserReviewCard: React.FC<{ review: IProductReview }> = ({review}) => {
 };
 
 
-const Main: React.FC<IProps> = ({product_id}) => {
+
+const UserReviewPost: React.FC<{}> = () => {
+    const {
+        register,
+        handleSubmit,
+        control,
+        formState: { errors },
+        reset
+    } = useForm<ReviewFormData>({
+        defaultValues: {
+            rating: 0,
+            description: ''
+        }
+    });
+
+    const onSubmit = (data: ReviewFormData) => {
+        console.log('Submitted data:', data);
+        // Post to API here
+        reset(); // Reset form after submit
+    };
+
+    return (
+        <form className="p-2" onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-4 grid grid-cols-2 gap-4">
+                {/* Star Rating */}
+                <div className="col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                        Rating
+                    </label>
+                    <Controller
+                        name="rating"
+                        control={control}
+                        rules={{ required: 'Rating is required' }}
+                        render={({ field }) => (
+                            <StarRating value={field.value} onChange={field.onChange} />
+                        )}
+                    />
+                    {errors.rating && (
+                        <p className="text-red-500 text-sm mt-1">{errors.rating.message}</p>
+                    )}
+                </div>
+
+                {/* Review Description */}
+                <div className="col-span-2">
+                    <label htmlFor="description"
+                           className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                        Review description
+                    </label>
+                    <textarea
+                        id="description"
+                        {...register('description', {
+                            required: 'Review description is required',
+                            minLength: {
+                                value: 10,
+                                message: 'Review must be at least 10 characters'
+                            }
+                        })}
+                        className="mb-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+                    ></textarea>
+                    {errors.description && (
+                        <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+                    )}
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="mt-2 middle none center rounded-lg bg-orange-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                        data-ripple-light="true"
+                    >
+                        Comment
+                    </button>
+                </div>
+            </div>
+        </form>
+    );
+};
+
+
+
+const Main: React.FC<IProps> = ({product_id, is_authenticated}) => {
     const [reviews, setReviews] = useState<IProductReview[]>([]);
     const [offset, setOffset] = useState(0);
     const [hasMore, setHasMore] = useState(true);
+
+    const login = (String(is_authenticated).toLowerCase() === 'true');
 
     const api = useAxios<PaginatedResponse<IProductReview>>({
         baseURL: `/api/public/products/${product_id}/reviews/`,
@@ -126,7 +218,7 @@ const Main: React.FC<IProps> = ({product_id}) => {
         <div style={style}>
             <Suspense fallback={<div>Loading review...</div>}>
                 <UserReviewCard review={reviews[index]}/>
-                <hr />
+                <hr/>
             </Suspense>
         </div>
     );
@@ -213,25 +305,7 @@ const Main: React.FC<IProps> = ({product_id}) => {
                 </div>
                 <div className="col-span-3">
                     <div className="rounded-lg bg-white dark:bg-gray-800">
-                        <form className="p-2">
-                            <div className="mb-4 grid grid-cols-2 gap-4">
-                                <StarRating/>
-                                <div className="col-span-2">
-                                    <label htmlFor="description"
-                                           className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Review
-                                        description</label>
-                                    <textarea id="description"
-                                              className="mb-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-                                    ></textarea>
-                                    <button
-                                        className="middle none center rounded-lg bg-orange-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                        data-ripple-light="true"
-                                    >
-                                        Comment
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                        <UserReviewPost/>
                     </div>
                 </div>
             </div>

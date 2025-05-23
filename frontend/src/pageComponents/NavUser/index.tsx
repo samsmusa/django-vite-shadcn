@@ -5,51 +5,59 @@ import {createRoot} from "react-dom/client";
 import {Button} from "@/components/ui/button"
 import {
     DropdownMenu,
-    DropdownMenuLabel,
     DropdownMenuContent,
     DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger,
-    DropdownMenuItem
-
+    DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import {DropdownMenuCheckboxItemProps} from "@radix-ui/react-dropdown-menu"
 
 
 interface IProps {
+    is_authenticated: string
 }
 
-type Checked = DropdownMenuCheckboxItemProps["checked"]
 
-const Main: React.FC<IProps> = ({}) => {
-    const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
-    const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
-    const [showPanel, setShowPanel] = React.useState<Checked>(false)
-
+const Main: React.FC<IProps> = ({is_authenticated}) => {
+    const login = (String(is_authenticated).toLowerCase() === 'true');
+    console.log(login, is_authenticated);
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="link"><i className="fa-solid fa-user"></i></Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                    <a href="/account">Profile</a>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <a href="/account">Billing</a>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <a href="/account">Settings</a>
-                </DropdownMenuItem>
-            </DropdownMenuGroup>
-                <DropdownMenuSeparator/>
-                <DropdownMenuItem>
-                    Log out
-                </DropdownMenuItem>
-            </DropdownMenuContent>
+            {
+                login ? <>
+                    <DropdownMenuContent className="w-56">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator/>
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem asChild>
+                                <a href="/account">Profile</a>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <a href="/account">Billing</a>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <a href="/account">Settings</a>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator/>
+                        <DropdownMenuItem>
+                            Log out
+                        </DropdownMenuItem>
+                    </DropdownMenuContent></> : <><DropdownMenuContent className="w-56">
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem asChild>
+                            <a href="/login">Login</a>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <a href="/signup">Sign Up</a>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent></>
+            }
         </DropdownMenu>
     )
 }
@@ -65,7 +73,7 @@ if (container) {
             <Hydrate<IProps>
                 component={Main}
                 containerId={containerId}
-                propNames={[]}
+                propNames={["is_authenticated"]}
             />
         </React.StrictMode>
     );

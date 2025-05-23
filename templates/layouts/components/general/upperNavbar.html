@@ -5,10 +5,10 @@
     </li>
     <li class="flex-1 md:hidden"></li>
     <li class="md:order-5">
-        <div id="nav-user"></div>
+        <div id="nav-user" data-is-authenticate="{{user.is_authenticated|yesno:"true,false"}}"></div>
     </li>
     <li class="cart cursor-pointer text-xl md:order-7">
-        <div id="nav-cart"></div>
+        <div id="nav-cart" data-is-authenticate="{{user.is_authenticated|yesno:"true,false"}}"></div>
     </li>
     <li class="nav-item search flex items-center items-stretch  mx-auto w-full text-black md:order-3 md:mx-3">
         <label class="hidden" for="main-dropdown">Category</label>

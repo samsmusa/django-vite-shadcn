@@ -5,6 +5,7 @@ import {SubmitHandler, useForm} from "react-hook-form";
 
 
 interface IProps {
+    is_authenticated: boolean;
 }
 
 type AddressFormData = {
@@ -173,7 +174,7 @@ function Payment() {
     </dl>;
 }
 
-const Main: React.FC<IProps> = ({}) => {
+const Main: React.FC<IProps> = ({is_authenticated}) => {
     return (
         <div className="py-4 md:py-8 relative">
             <div className="mb-4 grid gap-4 sm:grid-cols-2 sm:gap-8 lg:gap-16">
@@ -227,7 +228,7 @@ if (container) {
             <Hydrate<IProps>
                 component={Main}
                 containerId={containerId}
-                propNames={[]}
+                propNames={["is_authenticated"]}
             />
         </React.StrictMode>
     )
