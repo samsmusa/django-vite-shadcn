@@ -29,6 +29,7 @@ import {
 import {Input} from "@/components/ui/input"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {Checkbox} from "@/components/ui/checkbox";
+import {Badge} from "@/components/ui/badge";
 
 
 interface IProps {
@@ -88,9 +89,27 @@ const columns: ColumnDef<Payment>[] = [
     {
         accessorKey: "status",
         header: "Status",
-        cell: ({row}) => (
-            <div className="capitalize mt-1.5 inline-flex items-center rounded bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-300">{row.getValue("status")}</div>
-        ),
+        cell: ({ row }) => {
+            const status: string = row.getValue("status")
+
+            const statusMap: Record<string, { color: string; label: string }> = {
+                pending: { color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300", label: "Pending" },
+                processing: { color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300", label: "Processing" },
+                success: { color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300", label: "Completed" },
+                failed: { color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300", label: "Failed" },
+            }
+
+            const statusStyle = statusMap[status.toLowerCase()] || {
+                color: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+                label: status,
+            }
+
+            return (
+                <Badge className={`capitalize ${statusStyle.color}`}>
+                    {statusStyle.label}
+                </Badge>
+            )
+        },
     },
     {
         accessorKey: "email",
@@ -190,7 +209,7 @@ const Main: React.FC<IProps> = ({}) => {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="rounded-md border">
+            <div className="rounded-md border h-96 overflow-y-auto">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (

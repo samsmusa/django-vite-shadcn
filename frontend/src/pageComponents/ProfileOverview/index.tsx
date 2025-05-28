@@ -1,30 +1,22 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
 import {SubmitHandler, useForm} from "react-hook-form";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import useAxios, {PaginatedResponse} from "@/hooks/useAxios";
+import {Address} from "@/interfaces/address";
 
 
 interface IProps {
 }
 
-type AddressFormData = {
-    full_name: string;
-    address_line1: string;
-    address_line2: string;
-    city: string;
-    state: string;
-    country: string;
-    postal_code: string;
-    phone_number: string;
-    is_default: boolean;
-};
 
 interface EditableAddressProps {
     id: string | number;
     type: "billing" | "shipping";
     iconClass: string;
     label: string;
-    defaultValues: AddressFormData;
+    defaultValues: Address;
 }
 
 const EditableAddress: React.FC<EditableAddressProps> = ({
@@ -34,17 +26,16 @@ const EditableAddress: React.FC<EditableAddressProps> = ({
                                                              label,
                                                              defaultValues,
                                                          }) => {
-    const [isEditing, setIsEditing] = useState(false);
 
     const {
         register,
         handleSubmit,
         reset,
-    } = useForm<AddressFormData>({
+    } = useForm<Address>({
         defaultValues,
     });
 
-    const onSubmit: SubmitHandler<AddressFormData> = async (data) => {
+    const onSubmit: SubmitHandler<Address> = async (data) => {
         try {
             const response = await fetch(`/api/private/address/${id}/`, {
                 method: "PUT",
@@ -60,7 +51,6 @@ const EditableAddress: React.FC<EditableAddressProps> = ({
 
             const result = await response.json();
             console.log("Address updated:", result);
-            setIsEditing(false);
             reset(data); // refresh form values
         } catch (error) {
             console.error("Update failed:", error);
@@ -68,22 +58,29 @@ const EditableAddress: React.FC<EditableAddressProps> = ({
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="group">
-            <dt className="font-semibold flex justify-start items-center text-gray-900 dark:text-white relative">
-                {label}
+        <Popover>
+            <form onSubmit={handleSubmit(onSubmit)} className="group">
+                <dt className="font-semibold flex justify-start items-center text-gray-900 dark:text-white relative">
+                    {label}
+                    <PopoverTrigger asChild>
                 <span
                     className="opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300 ml-2"
-                    onClick={() => setIsEditing((prev) => !prev)}
                 >
-          <i className="fas fa-edit cursor-pointer"></i>
-        </span>
-            </dt>
-
-            {isEditing ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 text-gray-700 dark:text-white">
+                  <i className="fas fa-edit cursor-pointer"></i>
+                </span>
+                    </PopoverTrigger>
+                </dt>
+                <dd className="flex items-center gap-1 text-gray-500 dark:text-gray-400 mt-1">
+                    <i className={iconClass}></i>
+                    {`${defaultValues.address_line1}, ${defaultValues.city}, ${defaultValues.country}`}
+                </dd>
+                <PopoverContent
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 text-gray-700 dark:text-white">
                     <input {...register("full_name")} placeholder="Full Name" className="border p-1 rounded"/>
-                    <input {...register("address_line1")} placeholder="Address Line 1" className="border p-1 rounded"/>
-                    <input {...register("address_line2")} placeholder="Address Line 2" className="border p-1 rounded"/>
+                    <input {...register("address_line1")} placeholder="Address Line 1"
+                           className="border p-1 rounded"/>
+                    <input {...register("address_line2")} placeholder="Address Line 2"
+                           className="border p-1 rounded"/>
                     <input {...register("city")} placeholder="City" className="border p-1 rounded"/>
                     <input {...register("state")} placeholder="State" className="border p-1 rounded"/>
                     <input {...register("country")} placeholder="Country" className="border p-1 rounded"/>
@@ -91,61 +88,37 @@ const EditableAddress: React.FC<EditableAddressProps> = ({
                     <input {...register("phone_number")} placeholder="Phone Number" className="border p-1 rounded"/>
 
                     <div className="col-span-2 flex justify-end gap-2 mt-2">
-                        <button type="button" onClick={() => setIsEditing(false)} className="text-sm text-gray-500">
+                        <button type="button" className="text-sm text-gray-500">
                             Cancel
                         </button>
                         <button type="submit" className="text-sm bg-blue-600 text-white px-3 py-1 rounded">
                             Save
                         </button>
                     </div>
-                </div>
-            ) : (
-                <dd className="flex items-center gap-1 text-gray-500 dark:text-gray-400 mt-1">
-                    <i className={iconClass}></i>
-                    {`${defaultValues.address_line1}, ${defaultValues.city}, ${defaultValues.country}`}
-                </dd>
-            )}
-        </form>
+                </PopoverContent>
+
+            </form>
+        </Popover>
     );
 };
 
-const DeliveryAddress = () => (
+const DeliveryAddress = ({data}: { data: Address }) => (
     <EditableAddress
         id="123" // Replace with real ID
         type="shipping"
         label="Delivery Address"
         iconClass="fas fa-shipping-fast"
-        defaultValues={{
-            full_name: "John Doe",
-            address_line1: "9th St. PATH Station",
-            address_line2: "",
-            city: "New York",
-            state: "NY",
-            country: "USA",
-            postal_code: "10001",
-            phone_number: "1234567890",
-            is_default: false,
-        }}
+        defaultValues={data}
     />
 );
 
-const BillingAddress = () => (
+const BillingAddress = ({data}: { data: Address }) => (
     <EditableAddress
-        id="456" // Replace with real ID
-        type="billing"
+        id={data?.id}
+        type={data?.address_type}
         label="Home Address"
         iconClass="fa fa-home"
-        defaultValues={{
-            full_name: "John Doe",
-            address_line1: "2 Miles Drive",
-            address_line2: "",
-            city: "NJ 071",
-            state: "NJ",
-            country: "USA",
-            postal_code: "07001",
-            phone_number: "9876543210",
-            is_default: true,
-        }}
+        defaultValues={data}
     />
 );
 
@@ -174,6 +147,31 @@ function Payment() {
 }
 
 const Main: React.FC<IProps> = ({}) => {
+    const api = useAxios<PaginatedResponse<Address>>({
+        baseURL: `/api/private/address/`,
+        initialState: {
+            loading: false,
+            error: null,
+            data: {
+                count: 0,
+                next: null,
+                previous: null,
+                results: [],
+            },
+        },
+    });
+
+    const billingAddress = useMemo(() => {
+        return api?.data?.results?.find((e) => e?.address_type === "billing") || null;
+    }, [api?.data?.results]);
+
+    const shippingAddress = useMemo(() => {
+        return api?.data?.results?.find((e) => e?.address_type === "shipping") || null;
+    }, [api?.data?.results]);
+
+    useEffect(() => {
+        api.list("").then();
+    }, []);
     return (
         <div className="py-4 md:py-8 relative">
             <div className="mb-4 grid gap-4 sm:grid-cols-2 sm:gap-8 lg:gap-16">
@@ -197,8 +195,8 @@ const Main: React.FC<IProps> = ({}) => {
                         <dt className="font-semibold text-gray-900 dark:text-white">Email Address</dt>
                         <dd className="text-gray-500 dark:text-gray-400">helene@example.com</dd>
                     </dl>
-                    {/*<BillingAddress/>*/}
-                    {/*<DeliveryAddress/>*/}
+                    {billingAddress && <BillingAddress data={billingAddress}/>}
+                    {shippingAddress && <DeliveryAddress data={shippingAddress}/>}
                 </div>
                 <div className="space-y-4">
                     <dl>

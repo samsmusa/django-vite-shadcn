@@ -27,7 +27,7 @@ class Address(models.Model):
 
 	class Meta:
 		verbose_name_plural = 'Addresses'
-		unique_together = ('user', 'address_type', 'is_default')
+		unique_together = ('user', 'address_type')
 
 	def __str__(self):
 		return f"{self.full_name}, {self.address_line1}, {self.city}"

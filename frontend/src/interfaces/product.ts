@@ -34,3 +34,15 @@ export interface Product {
     discount_percentage: number;
     images: ProductImage[];
 }
+
+export interface IProductReview {
+    id: number;
+    product: number;
+    user: string;
+    rating: number;
+    title: string;
+    comment: string;
+    is_verified_purchase: boolean;
+    is_approved: boolean;
+    created_at: string;
+}

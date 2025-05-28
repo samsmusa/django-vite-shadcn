@@ -4,23 +4,13 @@ import {createRoot} from "react-dom/client";
 import useAxios, {PaginatedResponse} from "@/hooks/useAxios";
 import {humanizeTime} from "@/lib/utils";
 import {FixedSizeList as List} from 'react-window';
+import {IProductReview} from "@/interfaces/product";
 
 interface IProps {
     product_slug: string;
     product_id: string;
 }
 
-interface IProductReview {
-    id: number;
-    product: number;
-    user: string;
-    rating: number;
-    title: string;
-    comment: string;
-    is_verified_purchase: boolean;
-    is_approved: boolean;
-    created_at: string;
-}
 
 
 const StarRating: React.FC = () => {
