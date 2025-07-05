@@ -110,7 +110,7 @@ def add_view(request):
 @require_GET
 def product_detail_view(request, slug):
     product = get_object_or_404(
-        Product.objects.select_related("brand", "category", "vendor").prefetch_related("variants"),
+        Product.objects.only('id', 'slug', 'description', 'price'),
         slug=slug
     )
     offer_icon_url = "/static/icons/offer-badge.png"
@@ -417,8 +417,6 @@ def order_detail(request, order_id):
     }
 
     return render(request, 'shop/order_detail.html', context)
-
-
 
 
 class DiscountModelView(viewsets.ModelViewSet):
