@@ -389,7 +389,9 @@ export interface UseAxiosOptions<T = any> {
     timeout?: number;
     withCredentials?: boolean;
     initialState?: Partial<AxiosState<T>>;
+    keepPrevious?: boolean; // <- new
 }
+
 
 // Generic Axios state
 export interface AxiosState<T = any> {
@@ -443,6 +445,9 @@ export interface UseAxiosReturn<T = any> extends AxiosState<T> {
 }
 
 const useAxios = <T = any>(options: UseAxiosOptions<T> = {}): UseAxiosReturn<T> => {
+    const {
+        keepPrevious = false,
+    } = options;
     const axiosInstance = axios.create({
         baseURL: options.baseURL || '',
         headers: options.headers || { 'Content-Type': 'application/json', "X-CSRFToken": getCsrfToken() },
@@ -521,16 +526,73 @@ const useAxios = <T = any>(options: UseAxiosOptions<T> = {}): UseAxiosReturn<T> 
         [axiosInstance, handleSuccess, handleError]
     );
 
+    // const list = useCallback(
+    //     async (
+    //         url: string,
+    //         params: Record<string, any> = {},
+    //         config: AxiosRequestConfig = {}
+    //     ): Promise<T> => {
+    //         return requestWrapper<T>('get', url, params, config);
+    //     },
+    //     [requestWrapper]
+    // );
     const list = useCallback(
         async (
             url: string,
             params: Record<string, any> = {},
             config: AxiosRequestConfig = {}
         ): Promise<T> => {
-            return requestWrapper<T>('get', url, params, config);
+            setState(prev => ({ ...prev, loading: true, error: null }));
+
+            try {
+                const response = await axiosInstance.get<T>(url, {
+                    ...config,
+                    params,
+                });
+
+                const newData = response.data;
+
+                // If paginated and keepPrevious is true
+                if (
+                    keepPrevious &&
+                    newData &&
+                    typeof newData === 'object' &&
+                    'results' in newData &&
+                    Array.isArray((newData as any).results)
+                ) {
+                    setState(prev => {
+                        const prevResults = (prev.data as any)?.results || [];
+                        const mergedResults = [...prevResults, ...(newData as any).results];
+
+                        return {
+                            ...prev,
+                            data: {
+                                ...(newData as any),
+                                results: mergedResults,
+                            },
+                            loading: false,
+                            error: null,
+                            statusCode: response.status,
+                        };
+                    });
+                } else {
+                    setState(prev => ({
+                        ...prev,
+                        data: newData,
+                        loading: false,
+                        error: null,
+                        statusCode: response.status,
+                    }));
+                }
+
+                return response.data;
+            } catch (error) {
+                return handleError(error as AxiosError);
+            }
         },
-        [requestWrapper]
+        [axiosInstance, handleError, keepPrevious]
     );
+
 
     return {
         ...state,

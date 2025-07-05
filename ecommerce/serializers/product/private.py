@@ -33,8 +33,8 @@ class ProductReviewSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = ProductReview
 		fields = [
-			'id', 'product', 'user', 'rating', 'title', 'comment',
-			'is_verified_purchase', 'is_approved', 'created_at'
+			'id', 'product', 'user', 'rating','comment',
+			'is_approved', 'created_at'
 		]
 		read_only_fields = ['product', 'user', 'is_approved', 'created_at']
 
@@ -76,6 +76,23 @@ class CartItemSerializer(serializers.ModelSerializer):
 		]
 		read_only_fields = ['updated_at', 'created_at']
 
+class CartWithCartItemSerializer(serializers.ModelSerializer):
+	items = CartItemSerializer(many=True, read_only=True)
+	subtotal = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+	discount_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+	total = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+
+	class Meta:
+		model = Cart
+		fields = [
+			'id', 'user', 'session_id', 'is_active', 'discount',
+			'created_at', 'updated_at',
+			'items', 'subtotal', 'discount_amount', 'total'
+		]
+		read_only_fields = [
+			'user', 'session_id', 'created_at', 'updated_at',
+			'subtotal', 'discount_amount', 'total'
+		]
 
 class CartItemSerializerCreate(serializers.ModelSerializer):
 	class Meta:

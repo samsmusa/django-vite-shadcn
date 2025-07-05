@@ -8,9 +8,9 @@ import {Product} from "@/interfaces/product";
 
 
 interface ProductSliderProps {
-    title: string;
-    buttonName: string;
-    buttonUrl: string;
+    title?: string;
+    buttonName?: string;
+    buttonUrl?: string;
     allProductsData: Product[];
 }
 
@@ -65,10 +65,11 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
     return (
         <div className="w-full space-y-3">
             <div className="header flex gap-2 items-baseline md:gap-4">
-                <h1 className="text-sm font-bold sm:text-base md:text-xl">{title}</h1>
-                <a href={buttonUrl} className="cursor-pointer w-fit text-cyan-800 text-xs hover:underline hover:text-orange-700 md:text-sm">
+                {title && <h1 className="text-sm font-bold sm:text-base md:text-xl">{title}</h1>}
+                {buttonName && buttonUrl && <a href={buttonUrl}
+                    className="cursor-pointer w-fit text-cyan-800 text-xs hover:underline hover:text-orange-700 md:text-sm">
                     {buttonName}
-                </a>
+                </a>}
             </div>
 
             <Swiper

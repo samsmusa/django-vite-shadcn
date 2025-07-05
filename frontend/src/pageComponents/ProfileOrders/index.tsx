@@ -1,87 +1,41 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
 
 import {
     ColumnDef,
-    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
-    SortingState,
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table"
-import {ArrowUpDown, ChevronDown, MoreHorizontal} from "lucide-react"
+import {ArrowUpDown, ChevronDown} from "lucide-react"
 
 import {Button} from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {Input} from "@/components/ui/input"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
-import {Checkbox} from "@/components/ui/checkbox";
 import {Badge} from "@/components/ui/badge";
+import useAxios, {PaginatedResponse} from "@/hooks/useAxios";
+import {Order} from "@/interfaces/order";
 
 
 interface IProps {
 }
 
 
-const data: Payment[] = [
-    {
-        id: "m5gr84i9",
-        amount: 316,
-        status: "success",
-        email: "ken99@example.com",
-    },
-    {
-        id: "3u1reuv4",
-        amount: 242,
-        status: "success",
-        email: "Abe45@example.com",
-    },
-    {
-        id: "derv1ws0",
-        amount: 837,
-        status: "processing",
-        email: "Monserrat44@example.com",
-    },
-    {
-        id: "5kma53ae",
-        amount: 874,
-        status: "success",
-        email: "Silas22@example.com",
-    },
-    {
-        id: "bhqecj4p",
-        amount: 721,
-        status: "failed",
-        email: "carmella@example.com",
-    },
-]
-
-type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
-}
-
-const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<Order>[] = [
     {
         accessorKey: "id",
-        header: ({column}) => {
-            return "Order Id"
-        },
+        header: "Order ID",
         cell: ({row}) => (
             <div className="capitalize">{row.getValue("id")}</div>
         ),
@@ -89,17 +43,29 @@ const columns: ColumnDef<Payment>[] = [
     {
         accessorKey: "status",
         header: "Status",
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const status: string = row.getValue("status")
 
             const statusMap: Record<string, { color: string; label: string }> = {
-                pending: { color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300", label: "Pending" },
-                processing: { color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300", label: "Processing" },
-                success: { color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300", label: "Completed" },
-                failed: { color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300", label: "Failed" },
+                pending: {
+                    color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+                    label: "Pending",
+                },
+                processing: {
+                    color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+                    label: "Processing",
+                },
+                success: {
+                    color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+                    label: "Completed",
+                },
+                failed: {
+                    color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+                    label: "Failed",
+                },
             }
 
-            const statusStyle = statusMap[status.toLowerCase()] || {
+            const statusStyle = statusMap[status.toLowerCase()] ?? {
                 color: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
                 label: status,
             }
@@ -112,27 +78,10 @@ const columns: ColumnDef<Payment>[] = [
         },
     },
     {
-        accessorKey: "email",
-        header: ({column}) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Email
-                    <ArrowUpDown/>
-                </Button>
-            )
-        },
-        cell: ({row}) => <div className="lowercase">{row.getValue("email")}</div>,
-    },
-    {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
+        accessorKey: "discount_amount",
+        header: () => <div className="text-right">Discount</div>,
         cell: ({row}) => {
-            const amount = parseFloat(row.getValue("amount"))
-
-            // Format the amount as a dollar amount
+            const amount = parseFloat(row.getValue("discount_amount"));
             const formatted = new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
@@ -141,22 +90,71 @@ const columns: ColumnDef<Payment>[] = [
             return <div className="text-right font-medium">{formatted}</div>
         },
     },
+    {
+        accessorKey: "tax_amount",
+        header: () => <div className="text-right">Tax</div>,
+        cell: ({row}) => {
+            const amount = parseFloat(row.getValue("tax_amount"));
+            const formatted = new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+
+            return <div className="text-right font-medium">{formatted}</div>
+        },
+    },
+    {
+        accessorKey: "subtotal",
+        header: () => <div className="text-right">Sub Total</div>,
+        cell: ({row}) => {
+            const amount = parseFloat(row.getValue("subtotal"))
+            const formatted = new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+
+            return <div className="text-right font-medium">{formatted}</div>
+        },
+    },
+    {
+        accessorKey: "total",
+        header: () => <div className="text-right">Total</div>,
+        cell: ({row}) => {
+            const amount = parseFloat(row.getValue("total"))
+            const formatted = new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+
+            return <div className="text-right font-medium">{formatted}</div>
+        },
+    }
 ]
 
+
 const Main: React.FC<IProps> = ({}) => {
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
 
+    const api = useAxios<PaginatedResponse<Order>>({
+        baseURL: `/api/private/orders/`,
+        initialState: {
+            loading: false,
+            error: null,
+            data: {
+                count: 0,
+                next: null,
+                previous: null,
+                results: [],
+            },
+        },
+    });
+
+
     const table = useReactTable({
-        data,
+        data: api?.data?.results || [],
         columns,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
@@ -164,24 +162,17 @@ const Main: React.FC<IProps> = ({}) => {
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         state: {
-            sorting,
-            columnFilters,
             columnVisibility,
             rowSelection,
         },
     })
+    useEffect(() => {
+        api.list("?limit=9&offset=0").then();
+    }, []);
 
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter emails..."
-                    value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("email")?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
-                />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
@@ -268,16 +259,28 @@ const Main: React.FC<IProps> = ({}) => {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
+                        // onClick={() => table.previousPage()}
+                        // disabled={!table.getCanPreviousPage()}
+                        onClick={() => {
+                            if (api?.data?.previous) {
+                                api.list(api.data.previous)
+                            }
+                        }}
+                        disabled={!api?.data?.previous}
                     >
                         Previous
                     </Button>
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
+                        // onClick={() => table.nextPage()}
+                        // disabled={!table.getCanNextPage()}
+                        onClick={() => {
+                            if (api?.data?.next) {
+                                api.list(api?.data?.next)
+                            }
+                        }}
+                        disabled={!api?.data?.next}
                     >
                         Next
                     </Button>

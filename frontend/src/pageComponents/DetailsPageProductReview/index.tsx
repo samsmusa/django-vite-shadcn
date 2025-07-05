@@ -1,10 +1,13 @@
-import React, {Suspense, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
 import useAxios, {PaginatedResponse} from "@/hooks/useAxios";
 import {humanizeTime} from "@/lib/utils";
-import {FixedSizeList as List} from 'react-window';
 import {IProductReview} from "@/interfaces/product";
+import {SubmitHandler, useForm} from "react-hook-form";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
+import {useDebounce} from "@/hooks/useDebounce";
+import LoadingIcon from "@/components/common/LoaderComp";
 
 interface IProps {
     product_slug: string;
@@ -12,39 +15,38 @@ interface IProps {
 }
 
 
-
-const StarRating: React.FC = () => {
-    const [hovered, setHovered] = useState<number>(0);
-    const [rating, setRating] = useState<number>(0);
-
-    const handleMouseEnter = (index: number) => setHovered(index);
-    const handleMouseLeave = () => setHovered(0);
-    const handleClick = (index: number) => {
-        setRating(index);
-        console.log("Selected:", index);
-    };
-
-    return (
-        <div className="col-span-2">
-            <div className="flex items-center space-x-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                    <i
-                        key={star}
-                        className={`fa-solid fa-star cursor-pointer text-2xl transition ${
-                            (hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"
-                        }`}
-                        onMouseEnter={() => handleMouseEnter(star)}
-                        onMouseLeave={handleMouseLeave}
-                        onClick={() => handleClick(star)}
-                    />
-                ))}
-                <span className="ms-2 text-lg font-bold text-gray-900 dark:text-white">
-          {rating ? `${rating}.0 out of 5` : "Rate this"}
-        </span>
-            </div>
-        </div>
-    );
-};
+// const StarRating: React.FC = () => {
+//     const [hovered, setHovered] = useState<number>(0);
+//     const [rating, setRating] = useState<number>(0);
+//
+//     const handleMouseEnter = (index: number) => setHovered(index);
+//     const handleMouseLeave = () => setHovered(0);
+//     const handleClick = (index: number) => {
+//         setRating(index);
+//         console.log("Selected:", index);
+//     };
+//
+//     return (
+//         <div className="col-span-2">
+//             <div className="flex items-center space-x-1">
+//                 {[1, 2, 3, 4, 5].map((star) => (
+//                     <i
+//                         key={star}
+//                         className={`fa-solid fa-star cursor-pointer text-2xl transition ${
+//                             (hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"
+//                         }`}
+//                         onMouseEnter={() => handleMouseEnter(star)}
+//                         onMouseLeave={handleMouseLeave}
+//                         onClick={() => handleClick(star)}
+//                     />
+//                 ))}
+//                 <span className="ms-2 text-lg font-bold text-gray-900 dark:text-white">
+//           {rating ? `${rating}.0 out of 5` : "Rate this"}
+//         </span>
+//             </div>
+//         </div>
+//     );
+// };
 
 const ITEM_HEIGHT = 150;
 
@@ -52,7 +54,7 @@ const UserReviewCard: React.FC<{ review: IProductReview }> = ({review}) => {
     const createdAt = useMemo(() => humanizeTime(review.created_at), [review.created_at]);
 
     return (
-        <div className="gap-3 py-6 sm:flex sm:items-start">
+        <div className="gap-3 py-6 border-b sm:flex sm:items-start">
             <div className="shrink-0 space-y-2 sm:w-48 md:w-72">
                 <p className="text-base font-semibold text-gray-900 dark:text-white">{review.user}</p>
                 <div>
@@ -77,13 +79,58 @@ const UserReviewCard: React.FC<{ review: IProductReview }> = ({review}) => {
 };
 
 
-const Main: React.FC<IProps> = ({product_id}) => {
-    const [reviews, setReviews] = useState<IProductReview[]>([]);
-    const [offset, setOffset] = useState(0);
-    const [hasMore, setHasMore] = useState(true);
+type ReviewFormValues = {
+    rating: number;
+    comment: string;
+};
 
+type StarRatingProps = {
+    value: number;
+    onChange: (value: number) => void;
+};
+
+const StarRating: React.FC<StarRatingProps> = ({value, onChange}) => {
+    const [hovered, setHovered] = useState<number | null>(null);
+
+    return (
+        <div className="flex items-center space-x-1 relative">
+            {[1, 2, 3, 4, 5].map((star) => {
+                const isActive = hovered !== null ? star <= hovered : star <= value;
+                return (
+                    <button
+                        key={star}
+                        type="button"
+                        onClick={() => onChange(star)}
+                        onMouseEnter={() => setHovered(star)}
+                        onMouseLeave={() => setHovered(null)}
+                        className={`text-xl transition-colors duration-150 ${
+                            isActive ? "text-yellow-400" : "text-gray-300"
+                        }`}
+                        title={`${star} star${star > 1 ? "s" : ""}`}
+                    >
+                        ★
+                    </button>
+                );
+            })}
+        </div>
+    );
+};
+
+const ReviewForm: React.FC<{ product_id: string, refetch: (url: string) => void }> = ({product_id, refetch}) => {
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: {errors},
+    } = useForm<ReviewFormValues>({
+        defaultValues: {
+            rating: 0,
+            comment: "",
+        },
+    });
     const api = useAxios<PaginatedResponse<IProductReview>>({
-        baseURL: `/api/public/products/${product_id}/reviews/`,
+        baseURL: `/api/private/products/${product_id}/reviews/`,
         initialState: {
             loading: false,
             error: null,
@@ -96,30 +143,91 @@ const Main: React.FC<IProps> = ({product_id}) => {
         },
     });
 
-    const loadReviews = useCallback(async () => {
-        const response = await api.list(`?limit=3&offset=${offset}`);
-        if (response && Array.isArray(response.results)) {
-            setReviews((prev) => [...prev, ...response.results]);
-            setHasMore(Boolean(response.next));
-        }
-    }, [api, offset]);
-
-    useEffect(() => {
-        loadReviews();
-    }, [offset]);
-
-    const loadMore = () => {
-        if (hasMore) setOffset((prev) => prev + 10);
+    const onSubmit: SubmitHandler<ReviewFormValues> = (data) => {
+        console.log("Submitted review:", data);
+        api.post("", data).then()
+        refetch("")
     };
 
-    const Row = ({index, style}: { index: number; style: React.CSSProperties }) => (
-        <div style={style}>
-            <Suspense fallback={<div>Loading review...</div>}>
-                <UserReviewCard review={reviews[index]}/>
-                <hr />
-            </Suspense>
-        </div>
+    const rating = watch("rating");
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="p-2">
+            <div className="mb-4 grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                        Rating
+                    </label>
+                    <StarRating value={rating} onChange={(val) => setValue("rating", val)}/>
+                    {errors.rating && <p className="text-red-500 text-sm">Rating is required.</p>}
+                </div>
+
+                <div className="col-span-2">
+                    <label
+                        htmlFor="description"
+                        className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        Review description
+                    </label>
+                    <textarea
+                        id="description"
+                        {...register("comment", {required: "Description is required"})}
+                        className="mb-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+                    />
+                    {errors.comment && (
+                        <p className="text-red-500 text-sm">{errors.comment.message}</p>
+                    )}
+                    <button
+                        type="submit"
+                        className="middle none center mt-2 rounded-lg bg-orange-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    >
+                        Comment
+                    </button>
+                </div>
+            </div>
+        </form>
     );
+};
+
+const Main: React.FC<IProps> = ({product_id}) => {
+    const [reviews, setReviews] = useState<IProductReview[]>([]);
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+    const [scrollRoot, setScrollRoot] = useState<Element | null>(null);
+
+    const api = useAxios<PaginatedResponse<IProductReview>>({
+        baseURL: `/api/public/products/${product_id}/reviews/?limit=5`,
+        keepPrevious: true,
+        initialState: {
+            loading: false,
+            error: null,
+            data: {
+                count: 0,
+                next: null,
+                previous: null,
+                results: [],
+            },
+        },
+    });
+
+    const debouncedNext = useDebounce(() => {
+        console.log(reviews);
+        api.list(api?.data?.next || "");
+    }, 300);
+
+    useEffect(() => {
+        api.list("").then();
+
+        // Delay to ensure the ref is set
+        const timer = setTimeout(() => {
+            if (scrollContainerRef.current) {
+                console.log(scrollContainerRef.current);
+                setScrollRoot(scrollContainerRef.current);
+            }
+        }, 0);
+
+        return () => clearTimeout(timer);
+    }, []);
+
 
     return (
         <section className="bg-white antialiased dark:bg-gray-900">
@@ -202,57 +310,31 @@ const Main: React.FC<IProps> = ({product_id}) => {
                     </div>
                 </div>
                 <div className="col-span-3">
-                    <div className="rounded-lg bg-white dark:bg-gray-800">
-                        <form className="p-2">
-                            <div className="mb-4 grid grid-cols-2 gap-4">
-                                <StarRating/>
-                                <div className="col-span-2">
-                                    <label htmlFor="description"
-                                           className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Review
-                                        description</label>
-                                    <textarea id="description"
-                                              className="mb-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-                                    ></textarea>
-                                    <button
-                                        className="middle none center rounded-lg bg-orange-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                        data-ripple-light="true"
-                                    >
-                                        Comment
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                    <div className="rounded-lg bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] dark:bg-gray-800">
+                        <ReviewForm product_id={product_id} refetch={api.list} />
                     </div>
-                </div>
-            </div>
-            <div className="grid grid-cols-5">
-                <div className="col-span-2"></div>
-                <div className="col-span-3">
-                    {reviews.length > 0 ? (
-                        <List
-                            height={Math.min(reviews.length * ITEM_HEIGHT, 600)}
-                            itemCount={reviews.length}
-                            itemSize={ITEM_HEIGHT}
-                            width="100%"
-                        >
-                            {Row}
-                        </List>
-                    ) : (
-                        <div className="text-center text-gray-500 dark:text-gray-400 mt-8">
-                            No reviews yet.
-                        </div>
-                    )}
 
-                    {hasMore && (
-                        <div className="mt-4 flex justify-center">
-                            <button
-                                className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                                onClick={loadMore}
-                            >
-                                Load More Reviews
-                            </button>
-                        </div>
-                    )}
+                    <div className="h-[500px] overflow-auto" ref={scrollContainerRef}>
+                        <InfiniteScroll
+                            root={scrollRoot}
+                            hasMore={Boolean(api?.data?.next)}
+                            isLoading={api.loading}
+                            next={debouncedNext}
+                            // moveCursorTop={true}
+                        >
+                            {api?.data?.results?.map((review) => (
+                                <UserReviewCard review={review} key={review.id}/>
+                            ))}
+                            <div>
+                                <LoadingIcon
+                                    next={Boolean(api?.data?.next)}
+                                    hasMore={Boolean(api?.data?.next)}
+                                    noMoreMessage="That's all, thanks for reading!"
+                                />
+                            </div>
+                        </InfiniteScroll>
+                    </div>
+
                 </div>
             </div>
         </section>

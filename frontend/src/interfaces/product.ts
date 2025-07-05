@@ -46,3 +46,37 @@ export interface IProductReview {
     is_approved: boolean;
     created_at: string;
 }
+
+export interface Cart {
+    id: number;
+    user: number;
+    session_id: string;
+    is_active: boolean;
+    discount: number;
+    created_at: string;
+    updated_at: string;
+    items: CartItem[];
+    subtotal: string;
+    discount_amount: string;
+    total: string;
+}
+
+export interface CartItem {
+    id: number;
+    cart: number;
+    product: Product;
+    variant: ProductVariant;
+    quantity: number;
+    created_at: string;
+}
+
+export interface ProductVariant {
+    id: number;
+    name: string;
+    sku: string;
+    price: string;
+    stock_quantity: number;
+    is_active: boolean;
+    image: string;
+    attribute_values: string;
+}

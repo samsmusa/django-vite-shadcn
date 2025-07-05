@@ -45,3 +45,11 @@ export function getCsrfToken() {
   }
   return cookieValue;
 }
+
+export const percentToColor = (percent: number, base = '34, 197, 94') => {
+  const opacity = Math.min(1, percent / 100);
+  return `rgba(${base}, ${opacity})`;
+};
+
+export const boolToColor = (bool: boolean) =>
+    bool ? 'rgba(6,243,92,0.6)' : 'rgba(253,3,3,0.6)';

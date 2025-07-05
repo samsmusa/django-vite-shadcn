@@ -1,19 +1,44 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
 import {Button} from "@/components/ui/button"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
-import {DropdownMenuCheckboxItemProps, Separator} from "@radix-ui/react-dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {Separator} from "@radix-ui/react-dropdown-menu";
+import {ScrollArea} from "@/components/ui/scroll-area"
+import useAxios, {PaginatedResponse} from "@/hooks/useAxios";
+import {Cart, IProductReview} from "@/interfaces/product";
 
 
 interface IProps {
 }
 
-type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 const Main: React.FC<IProps> = ({}) => {
+
+    const api = useAxios<Cart>({
+        baseURL: `/api/private/cart/view_cart/`,
+        initialState: {
+            loading: false,
+            error: null,
+            data: {
+                id: 0,
+                user: 0,
+                session_id: '',
+                is_active: false,
+                discount: 0,
+                created_at: '',
+                updated_at: '',
+                items: [],
+                subtotal: '',
+                discount_amount: '',
+                total: ''
+            },
+        },
+    });
+    useEffect(() => {
+        api.get("").then()
+    }, []);
 
     return (
         <DropdownMenu>
@@ -22,9 +47,9 @@ const Main: React.FC<IProps> = ({}) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-96">
                 <ScrollArea className="h-72 w-full m-4">
-                    {Array(10).fill(1).map((_) => (
+                    {api.data?.items?.map((_) => (
                         <>
-                            <div className="flex justify-between space-x-4">
+                            <div className="flex justify-between space-x-4 px-4">
                                 <Avatar>
                                     <AvatarImage src="https://github.com/vercel.png"/>
                                     <AvatarFallback>VC</AvatarFallback>

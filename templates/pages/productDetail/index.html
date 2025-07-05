@@ -52,23 +52,14 @@
                         {% csrf_token %}
 
                         <!-- Offers -->
-                        <h4 class="flex items-center gap-3 md:gap-4 pt-2">
-                            <img class="w-6" src="{{ offer_icon_url }}" alt="Offers"/>
-                            <p class="font-bold text-base">Offers</p>
-                        </h4>
-                        <section id="details-offer-slider" class="w-full list-none flex gap-3 items-center">
-                            {% for offer in product.offers %}
-                                <div class="bg-gray-100 p-2 rounded-md text-xs">{{ offer }}</div>
-                            {% endfor %}
-                        </section>
-
-                        <hr class="my-3"/>
+                        <div id="data-product-offers" class="hidden" data-product-slug="{{ product.slug }}"
+                             data-product-id="{{ product.id }}"></div>
 
                         <!-- Benefits -->
                         <div id="data-product-discounts" data-product-slug="{{ product.slug }}"
                              data-product-id="{{ product.id }}"></div>
 
-                        <hr class="my-3"/>
+
                         <div id="data-product-variants" data-product-slug="{{ product.slug }}"
                              data-product-id="{{ product.id }}" data-product-stock="{{ product.stock_quantity }}"></div>
                         <div class="flex justify-between"></div>
@@ -121,14 +112,8 @@
             <!-- Frequently Bought Together -->
             <section class="px-4 md:px-10 py-6 border-t">
                 <h2 class="text-xl font-semibold mb-4">Frequently Bought Together</h2>
-                <div class="flex overflow-x-auto gap-4">
-                    {% for item in product.frequently_bought %}
-                        <div class="min-w-[150px] w-[150px] flex-shrink-0">
-                            <img src="{{ item.img_url }}" alt="{{ item.title }}" class="w-full h-32 object-contain">
-                            <p class="text-sm mt-1">{{ item.title }}</p>
-                        </div>
-                    {% endfor %}
-                </div>
+                <div id="details-product-brought" data-user="{{ request.user }}" data-product-slug="{{ product.slug }}"
+                     data-product-id="{{ product.id }}"></div>
             </section>
 
             <!-- Similar Products -->
@@ -154,6 +139,9 @@
     <script src="{% static 'js/detailspageproductvariant.bundle.js' %}"></script>
     <script src="{% static 'js/detailspageproductdiscount.bundle.js' %}"></script>
     <script src="{% static 'js/detailspageproductreview.bundle.js' %}"></script>
+    <script src="{% static 'js/detailspageproductcompare.bundle.js' %}"></script>
+    <script src="{% static 'js/detailspageproductsimilarproduct.bundle.js' %}"></script>
+    <script src="{% static 'js/detailspageproductsimilarbrought.bundle.js' %}"></script>
 
     <script type="text/javascript">
         function getCookie(name) {

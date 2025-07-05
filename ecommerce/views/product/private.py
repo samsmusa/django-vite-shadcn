@@ -1,8 +1,11 @@
 from django_filters.rest_framework.backends import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+
 import ecommerce.serializers.product.private as private_product_serializer
 from decom.permissions import IsOwnerOrReadOnly
 from ecommerce.models import Cart, CartItem, WishlistItem, Wishlist, Product, ProductReview
@@ -46,6 +49,27 @@ class PrivateCartViewSet(viewsets.ModelViewSet):
 		)
 
 		serializer.save(user=request.user, session_id=session_id)
+
+	@extend_schema(
+		responses=private_product_serializer.CartWithCartItemSerializer,
+		summary="Get cart",
+		description="Returns last cart and items.",
+	)
+	@action(detail=False, methods=["get"], url_path="view_cart")
+	def view_cart(self, request):
+		user = request.user
+		cart = (
+			Cart.objects.filter(user=user)
+			.order_by('-created_at')
+			.prefetch_related('items__product', 'items__variant')
+			.first()
+		)
+
+		if not cart:
+			return Response({"detail": "No cart found."}, status=status.HTTP_404_NOT_FOUND)
+
+		serializer = private_product_serializer.CartWithCartItemSerializer(cart)
+		return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @extend_schema(tags=["private-cart"])

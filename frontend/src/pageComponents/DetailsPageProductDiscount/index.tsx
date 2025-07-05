@@ -97,10 +97,10 @@ const Main: React.FC<IProps> = ({ product_id }) => {
     if (error) return <p className="text-red-500">Failed to load discounts.</p>;
 
     return (
-        <div>
-            <h2 className="text-xl font-semibold mb-4">Available Discounts</h2>
+        data?.results && data?.results.length > 0 && <div>
+                <h2 className="text-xl font-semibold mb-4">Available Discounts</h2>
             <div className="flex space-x-4 overflow-x-auto py-4">
-                {data?.results && data?.results.length > 0 ? (
+                {data?.results && data?.results.length > 0 && (
                     data.results.map((discount) => (
                         <DiscountCard
                             key={discount.id}
@@ -109,10 +109,9 @@ const Main: React.FC<IProps> = ({ product_id }) => {
                             onSelect={() => setSelectedId(discount.id)}
                         />
                     ))
-                ) : (
-                    <p className="text-gray-500">No active discounts found.</p>
                 )}
             </div>
+            <hr className="my-3"/>
         </div>
     );
 };

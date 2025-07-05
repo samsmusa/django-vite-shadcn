@@ -14,8 +14,11 @@ from django.urls import reverse
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import CreateView
+from rest_framework import viewsets
 
 from account.models import User
+from app.models import Discount
+from app.serializers import DiscountSerializer
 from ecommerce.models import Product, Order, Cart
 
 
@@ -414,3 +417,11 @@ def order_detail(request, order_id):
     }
 
     return render(request, 'shop/order_detail.html', context)
+
+
+
+
+class DiscountModelView(viewsets.ModelViewSet):
+    queryset = Discount.objects.all()
+    serializer_class = DiscountSerializer
+    lookup_field = "name"

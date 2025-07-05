@@ -41,6 +41,9 @@ module.exports = {
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
             },
+            animation: {
+                slowSpin: "spin 2s linear infinite"
+            }
         },
     },
     plugins: [],

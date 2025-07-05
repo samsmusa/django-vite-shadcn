@@ -9,6 +9,11 @@ from ecommerce.models.order import (
 )
 from ecommerce.models.product import Discount, Product, ProductVariant
 
+class OrderStatsSerializer(serializers.Serializer):
+    orders_made = serializers.IntegerField()
+    percentage_change = serializers.FloatField(allow_null=True)
+    vs_previous_month_avg = serializers.FloatField(allow_null=True)
+
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:

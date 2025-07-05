@@ -181,9 +181,7 @@ class ProductReview(TimeStampedMixin):
 	product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
 	rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-	title = models.CharField(max_length=100)
 	comment = models.TextField()
-	is_verified_purchase = models.BooleanField(default=False)
 	is_approved = models.BooleanField(default=False)
 
 	class Meta:
