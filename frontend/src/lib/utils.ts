@@ -53,3 +53,13 @@ export const percentToColor = (percent: number, base = '34, 197, 94') => {
 
 export const boolToColor = (bool: boolean) =>
     bool ? 'rgba(6,243,92,0.6)' : 'rgba(253,3,3,0.6)';
+
+const getRandomInRange = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+export const generateRandomImage = () => {
+  const width = getRandomInRange(300, 900);
+  const height = getRandomInRange(200, 600);
+  return `https://picsum.photos/${width}/${height}?random=${Date.now()}`;
+};

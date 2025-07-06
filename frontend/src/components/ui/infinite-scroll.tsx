@@ -4,23 +4,27 @@ interface InfiniteScrollProps {
     isLoading: boolean;
     hasMore: boolean;
     next: () => unknown;
+    hasPrevious?: boolean;
+    prev?: () => unknown;
     threshold?: number;
     root?: Element | Document | null;
     rootMargin?: string;
     reverse?: boolean;
-    moveCursorTop?: boolean;  // New prop
+    moveCursorTop?: boolean;
     children?: React.ReactNode;
 }
 
 export default function InfiniteScroll({
                                            isLoading,
                                            hasMore,
+                                           hasPrevious = false,
+                                           prev,
                                            next,
                                            threshold = 1,
                                            root = null,
                                            rootMargin = '0px',
                                            reverse = false,
-                                           moveCursorTop = false,  // default false
+                                           moveCursorTop = false,
                                            children,
                                        }: InfiniteScrollProps) {
     const observer = React.useRef<IntersectionObserver | null>(null);
