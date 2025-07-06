@@ -4,8 +4,8 @@ from ecommerce.models import Product
 class ProductFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
-    category = django_filters.CharFilter(field_name="category__slug", lookup_expr="iexact")
-    brand = django_filters.CharFilter(field_name="brand__name", lookup_expr="icontains")
+    category = django_filters.BaseInFilter(field_name="category__id", lookup_expr="in")
+    brand = django_filters.BaseInFilter(field_name="brand__id", lookup_expr="in")
     is_featured = django_filters.BooleanFilter()
 
     class Meta:

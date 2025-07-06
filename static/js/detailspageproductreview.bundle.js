@@ -10,26 +10,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/components/common/LoaderComp.tsx":
-/*!**********************************************!*\
-  !*** ./src/components/common/LoaderComp.tsx ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ \"./node_modules/react/jsx-runtime.js\");\n/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lucide-react */ \"./node_modules/lucide-react/dist/esm/icons/loader.js\");\n\n\nconst LoadingIcon = ({ next, hasMore, noMoreMessage }) => {\n    if (next) {\n        return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(\"div\", { className: \"flex items-center justify-center p-4  min-h-8\", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_1__[\"default\"], { className: \"animate-spin w-12 h-12 text-blue-500\" }) }));\n    }\n    if (!hasMore) {\n        return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(\"div\", { className: \"text-center text-gray-500 p-4 text-sm min-h-8\", children: noMoreMessage || \"No more items available.\" }));\n    }\n    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(\"div\", {});\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LoadingIcon);\n\n\n//# sourceURL=webpack://frontend/./src/components/common/LoaderComp.tsx?");
-
-/***/ }),
-
-/***/ "./src/components/ui/infinite-scroll.tsx":
-/*!***********************************************!*\
-  !*** ./src/components/ui/infinite-scroll.tsx ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ InfiniteScroll)\n/* harmony export */ });\n/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ \"./node_modules/react/jsx-runtime.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\n\n\nfunction InfiniteScroll({ isLoading, hasMore, next, threshold = 1, root = null, rootMargin = '0px', reverse = false, moveCursorTop = false, // default false\nchildren, }) {\n    const observer = react__WEBPACK_IMPORTED_MODULE_1__.useRef(null);\n    const prevIsLoading = react__WEBPACK_IMPORTED_MODULE_1__.useRef(isLoading);\n    react__WEBPACK_IMPORTED_MODULE_1__.useEffect(() => {\n        if (moveCursorTop && prevIsLoading.current && !isLoading && root) {\n            if ('scrollTop' in root) {\n                root.scrollTop = 0;\n            }\n            else if ('documentElement' in root) {\n                root.documentElement.scrollTop = 0;\n            }\n        }\n        prevIsLoading.current = isLoading;\n    }, [isLoading, root, moveCursorTop]);\n    const observerRef = react__WEBPACK_IMPORTED_MODULE_1__.useCallback((node) => {\n        if (isLoading || !hasMore)\n            return;\n        const clampedThreshold = Math.max(0, Math.min(threshold, 1));\n        if (observer.current)\n            observer.current.disconnect();\n        if (!node)\n            return;\n        observer.current = new IntersectionObserver(([entry]) => {\n            if (entry.isIntersecting && hasMore) {\n                next();\n            }\n        }, { root, rootMargin, threshold: clampedThreshold });\n        observer.current.observe(node);\n    }, [hasMore, isLoading, next, threshold, root, rootMargin]);\n    const childrenArray = react__WEBPACK_IMPORTED_MODULE_1__.useMemo(() => react__WEBPACK_IMPORTED_MODULE_1__.Children.toArray(children), [children]);\n    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: childrenArray.map((child, index) => {\n            if (!react__WEBPACK_IMPORTED_MODULE_1__.isValidElement(child)) {\n                if (true) {\n                    console.warn('Each child of InfiniteScroll must be a valid React element.');\n                }\n                return child;\n            }\n            const isTarget = reverse ? index === 0 : index === childrenArray.length - 1;\n            return react__WEBPACK_IMPORTED_MODULE_1__.cloneElement(child, Object.assign({}, (isTarget ? { ref: observerRef } : {})));\n        }) }));\n}\n\n\n//# sourceURL=webpack://frontend/./src/components/ui/infinite-scroll.tsx?");
-
-/***/ }),
-
 /***/ "./src/hooks/useDebounce.tsx":
 /*!***********************************!*\
   !*** ./src/hooks/useDebounce.tsx ***!
