@@ -62,7 +62,7 @@ const ProductList = ({}) => {
             >
                 <div className=" grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {data?.results?.map((product) => (
-                        <MemoizedProductCard key={product.id}/>
+                        <MemoizedProductCard key={product.id} product={product} />
                     ))}
 
                 </div>

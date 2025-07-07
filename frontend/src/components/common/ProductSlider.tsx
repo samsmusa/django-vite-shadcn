@@ -14,6 +14,7 @@ interface ProductSliderProps {
     allProductsData: Product[];
 }
 
+const MemoizedProductCard = React.memo(ProductCard);
 
 const ProductSlider: React.FC<ProductSliderProps> = ({
                                                          title,
@@ -41,7 +42,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 <CarouselContent>
                     {allProductsData.map((product, index) => (
                         <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4">
-                            <ProductCard/>
+                            <MemoizedProductCard key={product.id} product={product} />
                         </CarouselItem>
                     ))}
                 </CarouselContent>

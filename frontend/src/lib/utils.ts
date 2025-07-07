@@ -63,3 +63,11 @@ export const generateRandomImage = () => {
   const height = getRandomInRange(200, 600);
   return `https://picsum.photos/${width}/${height}?random=${Date.now()}`;
 };
+
+export const priceNotation = (price: number | string) => {
+  return price.toLocaleString();
+}
+
+export const productUrl = (slug: string) => {
+  return "/product/" + slug;
+}

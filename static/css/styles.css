@@ -566,11 +566,11 @@
   .h-\[50\%\] {
     height: 50%;
   }
+  .h-\[150px\] {
+    height: 150px;
+  }
   .h-\[200px\] {
     height: 200px;
-  }
-  .h-\[350px\] {
-    height: 350px;
   }
   .h-\[500px\] {
     height: 500px;
@@ -844,6 +844,12 @@
   .gap-8 {
     gap: calc(var(--spacing) * 8);
   }
+  .gap-9 {
+    gap: calc(var(--spacing) * 9);
+  }
+  .gap-16 {
+    gap: calc(var(--spacing) * 16);
+  }
   .space-y-1 {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 0;
@@ -871,6 +877,10 @@
       margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
       margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
     }
+  }
+  .gap-x-16 {
+    -moz-column-gap: calc(var(--spacing) * 16);
+         column-gap: calc(var(--spacing) * 16);
   }
   .space-x-1 {
     :where(& > :not(:last-child)) {
@@ -999,6 +1009,9 @@
   .border-l-transparent {
     border-left-color: transparent;
   }
+  .bg-accent {
+    background-color: var(--accent);
+  }
   .bg-background {
     background-color: var(--background);
   }
@@ -1037,6 +1050,9 @@
   }
   .bg-gray-700 {
     background-color: var(--color-gray-700);
+  }
+  .bg-gray-800 {
+    background-color: var(--color-gray-800);
   }
   .bg-green-100 {
     background-color: var(--color-green-100);
@@ -1161,6 +1177,9 @@
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
   }
+  .py-2\.5 {
+    padding-block: calc(var(--spacing) * 2.5);
+  }
   .py-3 {
     padding-block: calc(var(--spacing) * 3);
   }
@@ -1197,8 +1216,14 @@
   .pb-4 {
     padding-bottom: calc(var(--spacing) * 4);
   }
+  .pl-1\.5 {
+    padding-left: calc(var(--spacing) * 1.5);
+  }
   .pl-2 {
     padding-left: calc(var(--spacing) * 2);
+  }
+  .pl-3 {
+    padding-left: calc(var(--spacing) * 3);
   }
   .pl-4 {
     padding-left: calc(var(--spacing) * 4);
@@ -1539,6 +1564,9 @@
     -webkit-user-select: none;
     -moz-user-select: none;
          user-select: none;
+  }
+  .text-shadow-2xs {
+    text-shadow: 0px 1px 0px var(--tw-text-shadow-color, rgb(0 0 0 / 0.15));
   }
   .group-hover\:visible {
     &:is(:where(.group):hover *) {
@@ -2301,9 +2329,9 @@
       display: inline;
     }
   }
-  .sm\:h-\[450px\] {
+  .sm\:h-\[250px\] {
     @media (width >= 40rem) {
-      height: 450px;
+      height: 250px;
     }
   }
   .sm\:w-48 {
@@ -2387,6 +2415,11 @@
   .md\:my-8 {
     @media (width >= 48rem) {
       margin-block: calc(var(--spacing) * 8);
+    }
+  }
+  .md\:block {
+    @media (width >= 48rem) {
+      display: block;
     }
   }
   .md\:h-\[400px\] {
@@ -2542,6 +2575,16 @@
   .xl\:px-32 {
     @media (width >= 80rem) {
       padding-inline: calc(var(--spacing) * 32);
+    }
+  }
+  .\32 xl\:justify-center {
+    @media (width >= 96rem) {
+      justify-content: center;
+    }
+  }
+  .\32 xl\:gap-16 {
+    @media (width >= 96rem) {
+      gap: calc(var(--spacing) * 16);
     }
   }
   .dark\:flex {
@@ -3332,6 +3375,15 @@
   syntax: "*";
   inherits: false;
 }
+@property --tw-text-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-text-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
 @property --tw-scale-x {
   syntax: "*";
   inherits: false;
@@ -3432,6 +3484,8 @@
       --tw-drop-shadow-alpha: 100%;
       --tw-drop-shadow-size: initial;
       --tw-duration: initial;
+      --tw-text-shadow-color: initial;
+      --tw-text-shadow-alpha: 100%;
       --tw-scale-x: 1;
       --tw-scale-y: 1;
       --tw-scale-z: 1;
