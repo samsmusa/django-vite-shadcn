@@ -9,10 +9,10 @@ const ProductCard = ({product}  : {product: Product}) => {
     const name = product.name;
     const detailPage = productUrl(product.slug)
     return (
-        <a href={detailPage} className="group block overflow-hidden">
+        <a href={detailPage} className="group block overflow-hidden border-0">
             <Card className="w-full max-w-xs mx-auto cursor-pointer border-0">
                 {/* Image Section */}
-                <CardHeader className="p-0">
+                <CardHeader className="p-0 border-0">
                     <img
                         src={imgUrl}
                         alt="product"

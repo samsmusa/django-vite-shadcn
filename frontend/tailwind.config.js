@@ -2,6 +2,7 @@ module.exports = {
     darkMode: ["class"],
     content: [
         './src/**/*.{js,jsx,ts,tsx}',
+        '../templates/**/*.html',
     ],
     theme: {
         extend: {
@@ -40,6 +41,9 @@ module.exports = {
                 lg: "var(--radius)",
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
+            },
+            fontFamily: {
+                poppins: ["Poppins", "sans-serif"],
             },
             animation: {
                 slowSpin: "spin 2s linear infinite"

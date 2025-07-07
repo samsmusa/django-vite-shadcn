@@ -1,7 +1,8 @@
 import React from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
-import Slider from "@/components/common/Slider";
+import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious} from "@/components/ui/carousel";
+import {Card, CardContent} from "@/components/ui/card";
 
 
 interface IProps {
@@ -18,7 +19,30 @@ const images = [
 
 const Main: React.FC<IProps> = ({}) => {
     return (
-        <Slider images={images}/>
+        <Carousel
+            opts={{
+                align: "start",
+            }}
+            className="w-full"
+        >
+            <CarouselContent>
+                {images.map((img, index) => (
+                    <CarouselItem key={index} className="">
+                        <Card className="p-0 m-0 border-0">
+                            <CardContent className="p-0 m-0 border-0">
+                                <img
+                                    src={img.img}
+                                    alt="product"
+                                    className="w-full object-cover"
+                                />
+                            </CardContent>
+                        </Card>
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious/>
+            <CarouselNext/>
+        </Carousel>
     );
 };
 const containerId = 'home-nav-slider';

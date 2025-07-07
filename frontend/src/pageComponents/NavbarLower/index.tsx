@@ -10,13 +10,14 @@ interface IProps {
 
 }
 
-function ItemNav({link, title}: {link: string, title: string}) {
+function ItemNav({link, title}: { link: string, title: string }) {
     return <li>
         <a href={link} className="cursor-pointer flex justify-center align-middle font-semibold text-md">
             {title}
         </a>
     </li>;
 }
+
 
 const Main: React.FC<IProps> = ({}) => {
 
@@ -42,16 +43,16 @@ const Main: React.FC<IProps> = ({}) => {
         <nav
             className="flex items-center gap-x-16 overflow-auto bg-gray-800 px-4 py-2.5 text-sm whitespace-nowrap 2xl:justify-center 2xl:gap-16">
 
-            {/* Hamburger menu (visible only on medium and larger screens) */}
             <div className="hamburger-all cursor-pointer hidden md:block">
                 <DropdownMenu>
                     <DropdownMenuTrigger>
-                        <ItemNav link={"/products/"} title={"All"} />
+                        <ItemNav link={"/products/"} title={"All"}/>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <ScrollArea className="h-72 w-full">
                             {categoryData?.results?.map((category) => (
-                                <DropdownMenuItem className="text-ml cursor-pointer hover-bg-accent">{category.name}</DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className="text-ml cursor-pointer hover-bg-accent">{category.name}</DropdownMenuItem>
                             ))}
                         </ScrollArea>
                     </DropdownMenuContent>
@@ -60,12 +61,12 @@ const Main: React.FC<IProps> = ({}) => {
 
             {/* Main Navbar Items */}
             <ul className="flex items-center gap-x-16">
-                <ItemNav link={"/products/"} title={"Amazon Mini TV"} />
+                <ItemNav link={"/products/"} title={"Amazon Mini TV"}/>
 
-                <ItemNav link={"/products/"} title={"Amazon Mini TV"} />
-                <ItemNav link={"/products/"} title={"Amazon Mini TV"} />
-                <ItemNav link={"/products/"} title={"Amazon Mini TV"} />
-                <ItemNav link={"/products/"} title={"Amazon Mini TV"} />
+                <ItemNav link={"/products/"} title={"Amazon Mini TV"}/>
+                <ItemNav link={"/products/"} title={"Amazon Mini TV"}/>
+                <ItemNav link={"/products/"} title={"Amazon Mini TV"}/>
+                <ItemNav link={"/products/"} title={"Amazon Mini TV"}/>
             </ul>
         </nav>
     );
