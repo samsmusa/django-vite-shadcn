@@ -44,7 +44,9 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
 	"account",
 	"ecommerce",
-	'app'
+	'app',
+	"ui",
+'fileserver',
 ]
 
 INSTALLED_APPS = [
@@ -143,6 +145,30 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+# Media files configuration
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+# File upload settings
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024   # 10MB
+
+# Image optimization settings
+IMAGE_QUALITY = 85
+IMAGE_FORMATS = ['JPEG', 'PNG', 'WEBP']
+THUMBNAIL_SIZES = {
+    'thumbnail': (150, 150),
+    'small': (300, 300),
+    'medium': (600, 600),
+    'large': (1200, 1200),
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.urls import reverse
@@ -190,6 +191,21 @@ class ProductReview(TimeStampedMixin):
 
 	def __str__(self):
 		return f"{self.product.name} - {self.rating}/5 by {self.user.username}"
+
+class PromotedProduct(TimeStampedMixin):
+	name = models.CharField(max_length=255)
+	products = models.ManyToManyField(Product)
+	start_date = models.DateTimeField()
+	end_date = models.DateTimeField()
+
+	def clean(self):
+		super().clean()
+		if self.start_date and self.end_date and self.start_date >= self.end_date:
+			raise ValidationError("Start date must be before end date.")
+
+	def save(self, *args, **kwargs):
+		self.full_clean()
+		super().save(*args, **kwargs)
 
 
 class ProductRecommendation(TimeStampedMixin):

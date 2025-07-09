@@ -1,5 +1,5 @@
 from django_filters.rest_framework.backends import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -72,7 +72,9 @@ class PrivateCartViewSet(viewsets.ModelViewSet):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@extend_schema(tags=["private-cart"])
+@extend_schema(tags=["private-cart"], parameters=[
+        OpenApiParameter(name='cart_pk', type=int, location=OpenApiParameter.PATH),
+    ])
 class PrivateCartItemViewSet(viewsets.ModelViewSet):
 	serializer_class = private_product_serializer.CartItemSerializer
 	filter_backends = [DjangoFilterBackend]
@@ -83,6 +85,8 @@ class PrivateCartItemViewSet(viewsets.ModelViewSet):
 		return self.serializer_class
 
 	def get_queryset(self):
+		if getattr(self, "swagger_fake_view", False):
+			return CartItem.objects.none()
 		return CartItem.objects.filter(cart__user=self.request.user, cart_id=self.kwargs['cart_pk'])
 
 	def perform_create(self, serializer):

@@ -52,8 +52,10 @@ dependencies = [
     { name = "django-browser-reload" },
     { name = "django-cors-headers" },
     { name = "django-filter" },
+    { name = "django-ratelimit" },
     { name = "django-redis" },
     { name = "django-rest-framework" },
+    { name = "django-storages" },
     { name = "django-tailwind" },
     { name = "django-userforeignkey" },
     { name = "django-widget-tweaks" },
@@ -65,6 +67,7 @@ dependencies = [
     { name = "ipython" },
     { name = "locust" },
     { name = "pillow" },
+    { name = "python-magic" },
 ]
 
 [package.metadata]
@@ -74,8 +77,10 @@ requires-dist = [
     { name = "django-browser-reload", specifier = ">=1.18.0" },
     { name = "django-cors-headers", specifier = ">=4.7.0" },
     { name = "django-filter", specifier = ">=25.1" },
+    { name = "django-ratelimit", specifier = ">=4.1.0" },
     { name = "django-redis", specifier = ">=5.4.0" },
     { name = "django-rest-framework", specifier = ">=0.1.0" },
+    { name = "django-storages", specifier = ">=1.14.6" },
     { name = "django-tailwind", specifier = ">=4.0.1" },
     { name = "django-userforeignkey", specifier = ">=0.5.0" },
     { name = "django-widget-tweaks", specifier = ">=1.5.0" },
@@ -87,6 +92,7 @@ requires-dist = [
     { name = "ipython", specifier = ">=9.2.0" },
     { name = "locust", specifier = ">=2.36.2" },
     { name = "pillow", specifier = ">=11.2.1" },
+    { name = "python-magic", specifier = ">=0.4.27" },
 ]
 
 [[package]]
@@ -354,6 +360,15 @@ wheels = [
 ]
 
 [[package]]
+name = "django-ratelimit"
+version = "4.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6f/8f/94038fe739b095aca3e4708ecc8a4e77f1fcfd87bed5d6baff43d4c80bc4/django-ratelimit-4.1.0.tar.gz", hash = "sha256:555943b283045b917ad59f196829530d63be2a39adb72788d985b90c81ba808b", size = 11551, upload-time = "2023-07-24T20:34:32.374Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fb/78/2c59b30cd8bc8068d02349acb6aeed5c4e05eb01cdf2107ccd76f2e81487/django_ratelimit-4.1.0-py2.py3-none-any.whl", hash = "sha256:d047a31cf94d83ef1465d7543ca66c6fc16695559b5f8d814d1b51df15110b92", size = 11608, upload-time = "2023-07-24T20:34:31.362Z" },
+]
+
+[[package]]
 name = "django-redis"
 version = "5.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -374,6 +389,18 @@ dependencies = [
     { name = "djangorestframework" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/ed/d2/61159bc6efd1bf16adc4a2a48f7ace2080d1f7aef054f606d1857cab490c/django-rest-framework-0.1.0.tar.gz", hash = "sha256:47a8f496fa69e3b6bd79f68dd7a1527d907d6b77f009e9db7cf9bb21cc565e4a", size = 969, upload-time = "2017-07-20T17:14:33.345Z" }
+
+[[package]]
+name = "django-storages"
+version = "1.14.6"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ff/d6/2e50e378fff0408d558f36c4acffc090f9a641fd6e084af9e54d45307efa/django_storages-1.14.6.tar.gz", hash = "sha256:7a25ce8f4214f69ac9c7ce87e2603887f7ae99326c316bc8d2d75375e09341c9", size = 87587, upload-time = "2025-04-02T02:34:55.103Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1f/21/3cedee63417bc5553eed0c204be478071c9ab208e5e259e97287590194f1/django_storages-1.14.6-py3-none-any.whl", hash = "sha256:11b7b6200e1cb5ffcd9962bd3673a39c7d6a6109e8096f0e03d46fab3d3aabd9", size = 33095, upload-time = "2025-04-02T02:34:53.291Z" },
+]
 
 [[package]]
 name = "django-tailwind"
@@ -1039,6 +1066,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f7/e1/eee1129544b7f78fa2afa9fa0fce153cdcb21015b9b331d1b8adf90f45cb/python_engineio-4.12.0.tar.gz", hash = "sha256:f42a36a868d7063aa10ddccf6bd6117a169b6bd00d7ca53999772093b62014f9", size = 91503, upload-time = "2025-04-12T15:30:23.905Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2b/f7/0aeea75424c47633c1d98557a2323be23bed31fa950f00161b34a5150d06/python_engineio-4.12.0-py3-none-any.whl", hash = "sha256:a0c47c129c39777e8ebc6d18011efd50db2144e4e8f08983acae8a3614626535", size = 59319, upload-time = "2025-04-12T15:30:22.325Z" },
+]
+
+[[package]]
+name = "python-magic"
+version = "0.4.27"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/da/db/0b3e28ac047452d079d375ec6798bf76a036a08182dbb39ed38116a49130/python-magic-0.4.27.tar.gz", hash = "sha256:c1ba14b08e4a5f5c31a302b7721239695b2f0f058d125bd5ce1ee36b9d9d3c3b", size = 14677, upload-time = "2022-06-07T20:16:59.508Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/73/9f872cb81fc5c3bb48f7227872c28975f998f3e7c2b1c16e95e6432bbb90/python_magic-0.4.27-py2.py3-none-any.whl", hash = "sha256:c212960ad306f700aa0d01e5d7a325d20548ff97eb9920dcd29513174f0294d3", size = 13840, upload-time = "2022-06-07T20:16:57.763Z" },
 ]
 
 [[package]]
