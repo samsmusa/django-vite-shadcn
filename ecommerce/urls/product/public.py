@@ -2,10 +2,11 @@ from django.urls import path, include
 from rest_framework_nested import routers
 
 from ecommerce.views.product.public import PublicProductViewSet, PublicProductReviewViewSet, \
-    PublicProductVariantViewSet, PublicProductDiscountViewSet
+    PublicProductVariantViewSet, PublicProductDiscountViewSet, PublicFeaturedProductViewSet
 
 router = routers.DefaultRouter()
 router.register(r'products', PublicProductViewSet)
+router.register(r'featured-products', PublicFeaturedProductViewSet)
 
 product_router = routers.NestedSimpleRouter(router, r'products', lookup='product')
 product_router.register(r'reviews', PublicProductReviewViewSet, basename='product-reviews')

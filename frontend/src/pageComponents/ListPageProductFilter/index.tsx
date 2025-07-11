@@ -2,7 +2,7 @@ import React from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
 import {Button} from "@/components/ui/button";
-import ProductList from "@/components/common/ProductList";
+import ProductListInfiniteScroll from "@/components/common/ProductList";
 import ListProductFilter from "@/components/common/ListProductFilter";
 import {ProductFilterProvider} from "@/contexts/ProductFilterContext";
 
@@ -26,7 +26,7 @@ const Main: React.FC<IProps> = ({}) => {
                     <ListProductFilter/>
 
                     <div className="lg:col-span-3">
-                        <ProductList/>
+                        <ProductListInfiniteScroll/>
                     </div>
                 </div>
             </ProductFilterProvider>

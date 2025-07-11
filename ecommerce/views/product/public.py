@@ -5,8 +5,8 @@ from rest_framework.permissions import AllowAny
 from django.utils import timezone
 from django.db import models
 import ecommerce.serializers.product.public as public_product_serializer
-from ecommerce.filters.product import ProductFilter
-from ecommerce.models import Product, ProductReview, ProductVariant, Discount
+from ecommerce.filters.product import ProductFilter, PromotedProductFilter
+from ecommerce.models import Product, ProductReview, ProductVariant, Discount, PromotedProduct
 
 
 @extend_schema(tags=["public-product"])
@@ -23,6 +23,17 @@ class PublicProductViewSet(viewsets.ReadOnlyModelViewSet):
 			return public_product_serializer.ProductSerializer
 		else:
 			return public_product_serializer.ProductDetailSerializer
+
+
+
+@extend_schema(tags=["public-featured-product"])
+class PublicFeaturedProductViewSet(viewsets.ReadOnlyModelViewSet):
+	queryset = PromotedProduct.objects.all()
+	serializer_class = public_product_serializer.PromotedProductSerializer
+	permission_classes = [AllowAny]
+	lookup_field = 'pk'
+	filter_backends = [DjangoFilterBackend]
+	filterset_class = PromotedProductFilter
 
 
 @extend_schema(tags=["public-product"])

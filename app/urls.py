@@ -17,6 +17,7 @@ urlpatterns = [
     path('async/', views.async_view),
     path('add/', views.add_view),
     path('product/<slug:slug>/', views.product_detail_view, name='product_detail'),
+    path('featured-product/', views.featured_product, name='featured_product'),
     path('products/', views.products_page, name='products'),
     # path('product/<str:product_id>/', views.product_detail_view, name='product_detail'),
     path('checkout/cart/<int:cart_id>/', views.checkout, name='product_buy'),

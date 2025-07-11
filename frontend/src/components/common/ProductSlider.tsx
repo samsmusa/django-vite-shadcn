@@ -41,7 +41,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
             >
                 <CarouselContent>
                     {allProductsData.map((product, index) => (
-                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4">
+                        <CarouselItem key={index} className="basis-1/2 md:basis-1/4 lg:basis-1/6">
                             <MemoizedProductCard key={product.id} product={product} />
                         </CarouselItem>
                     ))}

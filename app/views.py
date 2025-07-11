@@ -20,6 +20,7 @@ from account.models import User
 from app.models import Discount
 from app.serializers import DiscountSerializer
 from ecommerce.models import Product, Order, Cart
+from ui.models import UI
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -119,6 +120,12 @@ def product_detail_view(request, slug):
         "product": product,
         "offer_icon_url": offer_icon_url,
     })
+
+
+@require_GET
+def featured_product(request):
+    ui_product = UI.objects.filter(featured_product__isnull=False)
+    return render(request, 'pages/featured_product/index.html', {"featured": ui_product})
 
 
 @require_GET

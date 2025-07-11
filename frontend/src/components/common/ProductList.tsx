@@ -22,7 +22,7 @@ const filterUrlBuilder = (filters: FilterState) => {
 };
 
 
-const ProductList = ({}) => {
+const ProductListInfiniteScroll = ({}) => {
     const {filter} = useProductFilter(); // filter context contains brands and categories (both are lists of integers)
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [scrollRoot, setScrollRoot] = useState<Element | null>(null);
@@ -78,4 +78,20 @@ const ProductList = ({}) => {
     )
 }
 
-export default ProductList;
+export default ProductListInfiniteScroll;
+
+
+export const ProductList = ({products}:{products: Product[]})=>{
+    return (
+        <div className="h-[1500px] overflow-auto">
+
+
+                <div className=" grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {products?.map((product) => (
+                        <MemoizedProductCard key={product.id} product={product} />
+                    ))}
+
+                </div>
+        </div>
+    )
+}

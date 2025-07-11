@@ -1,185 +1,73 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
 import GridItem from "@/components/common/GridItem";
+import useAxios, {PaginatedResponse} from "@/hooks/useAxios";
+import {UI} from "@/interfaces/ui";
+import {cn, gridColsMap} from "@/lib/utils";
 
 
 interface IProps {
 }
 
+interface GroupedData {
+    [key: number]: UI[];
+}
 
-const grid_1ItemsData = [
-    {
-        title: "Appliances for your home | Up to 55% off",
-        images: [
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/IMG15/Irfan/GATEWAY/MSO/Appliances-QC-PC-186x116--B08RDL6H79._SY116_CB667322346_.jpg",
-                label: "Air conditioners",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/IMG15/Irfan/GATEWAY/MSO/Appliances-QC-PC-186x116--B08345R1ZW._SY116_CB667322346_.jpg",
-                label: "Refrigerators",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/IMG15/Irfan/GATEWAY/MSO/Appliances-QC-PC-186x116--B07G5J5FYP._SY116_CB667322346_.jpg",
-                label: "Microwaves",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/IMG15/Irfan/GATEWAY/MSO/186x116---wm._SY116_CB667322346_.jpg",
-                label: "Washing machines",
-            },
-        ],
-        buttonName: "See more",
-    },
-    {
-        title: "Prime exclusive offers | Travel tickets",
-        images: [
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img23/AmazonPay/PD23/QC/Flight_186x116._SY116_CB600937888_.jpg",
-                label: "Get up to 25% off* on flight tickers",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img23/AmazonPay/PD23/QC/Train_186x116._SY116_CB600937888_.jpg",
-                label: "Zero gateway fees on trains",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img23/AmazonPay/PD23/QC/Bus_186x116._SY116_CB600937888_.jpg",
-                label: "Flat 10% back on bus tickets",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img23/AmazonPay/PD23/QC/SW_186x116._SY116_CB600937888_.jpg",
-                label: "Products for your travel needs",
-            },
-        ],
-        buttonName: "See all offers",
-    },
-    {
-        title: "Up to 50% off | Monitor blood sugar",
-        images: [
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img21/Pharmacy/GW/2023/WK28/PC_CC_Set_379x304_01._SY304_CB601485788_.jpg",
-                label: "",
-            },
-        ],
-        buttonName: "Visit the store",
-    },
-    {
-        title: "Up to 70% off | Clearance store",
-        images: [
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Electronics/Clearance/Clearance_store_Desktop_CC_1x._SY304_CB628315133_.jpg",
-                label: "",
-            },
-        ],
-        buttonName: "See more",
-    },
-    {
-        title: "Revamp your home in style",
-        images: [
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/IMG20/Home/2021/GW/MSO/April/372x232_1_Low._SY116_CB670263840_.jpg",
-                label: "Bedsheets, curtains & more",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/IMG20/Home/2021/GW/MSO/April/372x232_2_Low._SY116_CB670263840_.jpg",
-                label: "Home decoration",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/IMG20/Home/2021/GW/MSO/April/372x232_3_Low._SY116_CB670263840_.jpg",
-                label: "Home storage",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/IMG20/Home/2021/GW/MSO/April/372x232_4_Low._SY116_CB670263840_.jpg",
-                label: "Lighting solutions",
-            },
-        ],
-        buttonName: "Explore all",
-    },
-    {
-        title: "Automotive essentials | Up to 60% off",
-        images: [
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img17/Auto/2020/GW/PCQC/Glasscare1X._SY116_CB410830553_.jpg",
-                label: "Cleaning Accessories",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img17/Auto/2020/GW/PCQC/Rim_tyrecare1x._SY116_CB410830552_.jpg",
-                label: "Tyre & rim care",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img17/Auto/2020/GW/PCQC/Vega_helmet_186x116._SY116_CB405090404_.jpg",
-                label: "Helmets",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img17/Auto/2020/GW/PCQC/Vaccum1x._SY116_CB410830552_.jpg",
-                label: "Vacuum cleaner",
-            },
-        ],
-        buttonName: "See more",
-    },
-    {
-        title: "Up to 70% off | Styles for men",
-        images: [
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Fashion/Gateway/BAU/BTF-Refresh/May/PF_MF/MF-1-186-116._SY116_CB636110853_.jpg",
-                label: "Clothing",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Fashion/Gateway/BAU/BTF-Refresh/May/PF_MF/MF-2-186-116._SY116_CB636110853_.jpg",
-                label: "Footwear",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Fashion/Gateway/BAU/BTF-Refresh/May/PF_MF/MF-3-186-116._SY116_CB636110853_.jpg",
-                label: "Watches",
-            },
-            {
-                imageUrl:
-                    "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Fashion/Gateway/BAU/BTF-Refresh/May/PF_MF/MF-4-186-116._SY116_CB636110853_.jpg",
-                label: "Bags & luggage",
-            },
-        ],
-        buttonName: "End of season sale",
-    },
-];
+
 
 const HomeComponent: React.FC<IProps> = ({}) => {
+    const [groupedData, setGroupedData] = useState<GroupedData>({});
+
+
+    const api = useAxios<PaginatedResponse<UI>>({
+        baseURL: `/api/protected/ui/`,
+        initialState: {
+            loading: false,
+            error: null,
+            data: {
+                count: 0,
+                next: null,
+                previous: null,
+                results: [],
+            },
+        },
+    });
+
+    useEffect(() => {
+        api.list("?tag=home8grid").then()
+    }, []);
+
+    useEffect(() => {
+        if (api?.data?.results?.length) {
+            const grouped = api.data.results.reduce((acc: GroupedData, item: UI) => {
+                if (!acc[item.row]) {
+                    acc[item.row] = [];
+                }
+                acc[item.row].push(item);
+                return acc;
+            }, {});
+
+            setGroupedData(grouped);
+        }
+    }, [api?.data]);
+
     return (
-        <>
-            {grid_1ItemsData.map((item, index) => (
-                <GridItem
-                    key={index}
-                    title={item.title}
-                    images={item.images}
-                    buttonName={item.buttonName}
-                />
-            ))}
-            <GridItem
-                title="Sign in for your best experience"
-                images={null}
-                buttonName={null}
-            />
-        </>
+        <div className="gap-y-3 flex flex-col">
+            {Object.keys(groupedData).map((row) => {
+                const colCount = groupedData[Number(row)].length;
+                return (
+                    <div
+                        key={row}
+                        className={cn('w-full grid gap-4', gridColsMap[colCount] || 'grid-cols-1')}
+                    >
+                        {groupedData[Number(row)].map((item, index) => (
+                            <GridItem key={index} {...item}/>
+                        ))}
+                    </div>
+                );
+            })}
+        </div>
     );
 };
 const containerId = 'home-8-grid';

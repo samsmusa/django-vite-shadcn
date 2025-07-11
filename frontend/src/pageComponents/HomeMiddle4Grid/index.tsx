@@ -1,7 +1,7 @@
 import React from 'react';
 import {Hydrate} from "@/lib/Hydrate";
 import {createRoot} from "react-dom/client";
-import GridItem from "@/components/common/GridItem";
+import GridItem2 from "@/components/common/GridItem2";
 
 
 interface IProps {
@@ -104,7 +104,7 @@ const HomeComponent: React.FC<IProps> = ({}) => {
     return (
         <>
             {grid_2ItemsData.map((item, index) => (
-                <GridItem
+                <GridItem2
                     key={index}
                     title={item.title}
                     images={item.images}

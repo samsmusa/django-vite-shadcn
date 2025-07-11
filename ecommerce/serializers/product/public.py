@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from ecommerce.models import (
 	Product, ProductVariant, ProductImage,
-	ProductReview, Cart, CartItem, Wishlist, WishlistItem, Discount
+	ProductReview, Cart, CartItem, Wishlist, WishlistItem, Discount, PromotedProduct
 )
 from ecommerce.serializers.base.public import BrandSerializer, CategoryOnlySerializer
 
@@ -120,3 +120,9 @@ class DiscountSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Discount
 		fields = ["id", "name", "value", "discount_type", "maximum_discount_amount", "valid_from", "valid_to", "minimum_order_amount"]
+
+class PromotedProductSerializer(serializers.ModelSerializer):
+	products = ProductSerializer(read_only=True, many=True)
+	class Meta:
+		model = PromotedProduct
+		fields = "__all__"

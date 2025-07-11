@@ -80,3 +80,13 @@ export interface ProductVariant {
     image: string;
     attribute_values: string;
 }
+
+export interface PromotedProduct {
+    id: number;
+    name: string;
+    products: Product[];
+    created_at: string;
+    updated_at: string;
+    start_date: string;
+    end_date: string;
+}

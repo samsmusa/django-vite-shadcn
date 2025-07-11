@@ -9,6 +9,7 @@ import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {useDebounce} from "@/hooks/useDebounce";
 import LoadingIcon from "@/components/common/LoaderComp";
 
+
 interface IProps {
     product_slug: string;
     product_id: string;
@@ -189,6 +190,7 @@ const ReviewForm: React.FC<{ product_id: string, refetch: (url: string) => void 
     );
 };
 
+
 const Main: React.FC<IProps> = ({product_id}) => {
     const [reviews, setReviews] = useState<IProductReview[]>([]);
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -311,7 +313,7 @@ const Main: React.FC<IProps> = ({product_id}) => {
                 </div>
                 <div className="col-span-3">
                     <div className="rounded-lg bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] dark:bg-gray-800">
-                        <ReviewForm product_id={product_id} refetch={api.list} />
+                        <ReviewForm product_id={product_id} refetch={api.list}/>
                     </div>
 
                     <div className="h-[500px] overflow-auto" ref={scrollContainerRef}>

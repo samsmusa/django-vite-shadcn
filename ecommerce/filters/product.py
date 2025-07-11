@@ -1,5 +1,6 @@
 import django_filters
-from ecommerce.models import Product
+from ecommerce.models import Product, PromotedProduct
+
 
 class ProductFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
@@ -11,3 +12,11 @@ class ProductFilter(django_filters.FilterSet):
     class Meta:
         model = Product
         fields = ['min_price', 'max_price', 'category', 'brand', 'is_featured']
+
+class PromotedProductFilter(django_filters.FilterSet):
+    start_date = django_filters.NumberFilter(field_name="start_date", lookup_expr="gte")
+    end_date = django_filters.NumberFilter(field_name="end_date", lookup_expr="lte")
+
+    class Meta:
+        model = PromotedProduct
+        fields = ['start_date', 'end_date']

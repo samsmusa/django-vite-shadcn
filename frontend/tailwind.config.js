@@ -42,13 +42,27 @@ module.exports = {
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
             },
-            fontFamily: {
-                poppins: ["Poppins", "sans-serif"],
-            },
+            // fontFamily: {
+            //     poppins: ["Poppins", "sans-serif"],
+            // },
             animation: {
                 slowSpin: "spin 2s linear infinite"
             }
         },
     },
+    safelist: [
+        'grid-cols-1',
+        'grid-cols-2',
+        'grid-cols-3',
+        'grid-cols-4',
+        'grid-cols-5',
+        'grid-cols-6',
+        'grid-cols-7',
+        'grid-cols-8',
+        'grid-cols-9',
+        'grid-cols-10',
+        'grid-cols-11',
+        'grid-cols-12',
+    ],
     plugins: [],
 }

@@ -198,6 +198,9 @@ class PromotedProduct(TimeStampedMixin):
 	start_date = models.DateTimeField()
 	end_date = models.DateTimeField()
 
+	def __str__(self):
+		return self.name
+
 	def clean(self):
 		super().clean()
 		if self.start_date and self.end_date and self.start_date >= self.end_date:

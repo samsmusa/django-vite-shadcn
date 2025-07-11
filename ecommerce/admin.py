@@ -8,7 +8,7 @@ from ecommerce.models import (
 	Inventory, InventoryLog, Supplier, PurchaseOrder, PurchaseOrderItem,
 	Refund, RefundItem, ShippingMethod, ShippingZone, ShippingRate,
 	ProductRecommendation, SalesReport, ProductPerformance, UserSegment,
-	MarketingCampaign, AbandonedCart, SiteConfiguration
+	MarketingCampaign, AbandonedCart, SiteConfiguration, PromotedProduct
 )
 
 
@@ -19,5 +19,5 @@ for model in [Address, Category, Brand, ProductAttribute, ProductAttributeValue,
 	Inventory, InventoryLog, Supplier, PurchaseOrder, PurchaseOrderItem,
 	Refund, RefundItem, ShippingMethod, ShippingZone, ShippingRate,
 	ProductRecommendation, SalesReport, ProductPerformance, UserSegment,
-	MarketingCampaign, AbandonedCart, SiteConfiguration]:
+	MarketingCampaign, AbandonedCart, SiteConfiguration, PromotedProduct]:
 	admin.site.register(model)
