@@ -1,0 +1,20 @@
+<div class="flex flex-col justify-between align-middle gap-4 p-2 h-full w-full rounded-xl bg-card text-card-foreground shadow-sm border">
+
+    <!-- Card Header -->
+    <div class="">
+        <a href="/signup">
+            <button class="border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 bg-primary">
+                Sign in securely
+            </button>
+        </a>
+    </div>
+
+    <!-- Card Content -->
+    <div class="grow">
+        <img src="{{ ui.config.image.imageUrl }}" alt="{{ ui.config.image.label|default:'product image' }}"
+             class="w-full object-cover rounded-lg">
+        {% if ui.config.image.label %}
+            <p class="text-sm text-center text-muted-foreground mt-2">{{ ui.config.image.label }}</p>
+        {% endif %}
+    </div>
+</div>

@@ -25,68 +25,68 @@ SECRET_KEY = 'django-insecure-p2&2lm$##r56lb6d)uiyu4=57l9&2)##3uf57qx-ocd-ijm+c@
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "*"
 ]
 
 # Application definition
 
 THIRD_PARTY_APPS = [
-	'tailwind',
-	"theme",
-	"rest_framework",
-	"corsheaders",
-	'django_browser_reload',
-	'drf_spectacular',
-	'django_filters',
-	'fontawesomefree',
-	'widget_tweaks',
+    "rest_framework",
+    "corsheaders",
+    'django_browser_reload',
+    'drf_spectacular',
+    'django_filters',
+    'fontawesomefree',
+    'widget_tweaks',
+    "tailwind",
+    "theme",
 ]
 
 LOCAL_APPS = [
-	"account",
-	"ecommerce",
-	'app',
-	"ui",
-'fileserver',
+    "account",
+    "ecommerce",
+    'app',
+    "ui",
+    'fileserver',
 ]
 
 INSTALLED_APPS = [
-	                 'django.contrib.admin',
-	                 'django.contrib.auth',
-	                 'django.contrib.contenttypes',
-	                 'django.contrib.sessions',
-	                 'django.contrib.messages',
-	                 'django.contrib.staticfiles',
+                     'django.contrib.admin',
+                     'django.contrib.auth',
+                     'django.contrib.contenttypes',
+                     'django.contrib.sessions',
+                     'django.contrib.messages',
+                     'django.contrib.staticfiles',
                  ] + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
-	'corsheaders.middleware.CorsMiddleware',
-	'django.middleware.security.SecurityMiddleware',
-	'django.contrib.sessions.middleware.SessionMiddleware',
-	'django.middleware.common.CommonMiddleware',
-	'django.middleware.csrf.CsrfViewMiddleware',
-	'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware',
-	'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-	"django_browser_reload.middleware.BrowserReloadMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = 'decom.urls'
 
 TEMPLATES = [
-	{
-		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [BASE_DIR / "templates"],
-		'APP_DIRS': True,
-		'OPTIONS': {
-			'context_processors': [
-				'django.template.context_processors.request',
-				'django.contrib.auth.context_processors.auth',
-				'django.contrib.messages.context_processors.messages',
-				'app.context_processors.theme_context',
-			],
-		},
-	},
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / "templates"],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'app.context_processors.theme_context',
+            ],
+        },
+    },
 ]
 
 WSGI_APPLICATION = 'decom.wsgi.application'
@@ -95,38 +95,38 @@ WSGI_APPLICATION = 'decom.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': BASE_DIR / 'db.sqlite3',
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 CACHES = {
-	'default': {
-		'BACKEND': 'django_redis.cache.RedisCache',
-		'LOCATION': 'redis://127.0.0.1:6379/1',  # Use DB 1 for app cache
-		'OPTIONS': {
-			'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-		}
-	}
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Use DB 1 for app cache
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
 }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-	{
-		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-	},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 # Internationalization
@@ -147,7 +147,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-
 # Media files configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -158,7 +157,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024   # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
 # Image optimization settings
 IMAGE_QUALITY = 85
@@ -177,29 +176,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TAILWIND_APP_NAME = 'theme'
 
 CORS_ALLOWED_ORIGINS = [
-	"https://e-kassa.fi",
+    "https://e-kassa.fi",
 ]
 
 AUTH_USER_MODEL = "account.User"
 REST_FRAMEWORK = {
-	'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-	'PAGE_SIZE': 100,
-	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-	'DEFAULT_FILTER_BACKENDS': [
-		'django_filters.rest_framework.DjangoFilterBackend',
-	],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
 }
 SPECTACULAR_SETTINGS = {
-	'TITLE': 'Your Project API',
-	'DESCRIPTION': 'Your project description',
-	'VERSION': '1.0.0',
-	'SERVE_INCLUDE_SCHEMA': False,
-	"SWAGGER_UI_SETTINGS": {
-		"deepLinking": True,
-		"persistAuthorization": True,
-		"displayOperationId": True,
-	},
-	# OTHER SETTINGS
+    'TITLE': 'Your Project API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
+    # OTHER SETTINGS
 }
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"

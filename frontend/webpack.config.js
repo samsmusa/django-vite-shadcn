@@ -55,6 +55,10 @@ module.exports = {
                                     require('@tailwindcss/postcss'),
                                     require('autoprefixer'),
                                 ],
+                                // plugins: [
+                                //     require('tailwindcss'),
+                                //     require('autoprefixer'),
+                                // ],
                             },
                         },
                     },
@@ -65,7 +69,7 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: '../css/styles.css', // Single CSS file for all components
-            chunkFilename: '../css/styles.css', // Also handle chunk CSS in the same file
+            chunkFilename: '../css/[id].css', // Also handle chunk CSS in the same file
         }),
     ],
     optimization: {

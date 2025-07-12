@@ -243,11 +243,6 @@ export const TwoXone: React.FC<UI> = ({name}) => {
                         alt="Sponsored"
                         className="object-cover object-center w-full"
                     />
-                    <p
-                        className="absolute bottom-[5.5%] right-0 z-30 text-[12px] text-gray-500"
-                    >
-                        Sponsored
-                    </p>
                 </div>
             </a>
         </Card>

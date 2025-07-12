@@ -7,19 +7,15 @@
 {% block container %}
     <div class="bg-white mt-4">
         <div class="max-w-[1500px] mx-auto">
-            <div class="grid grid-cols-10 gap-4">
+            <div class="grid grid-cols-1  lg:grid-cols-10  gap-4">
 
                 <!-- product image -->
                 <div id="details-product-images" data-product-id="{{ product.id }}"
-                     data-product-slug="{{ product.slug }}" class="col-span-4 p-10">
-                    <img
-                            class="object-contain object-top sm:max-w-xs lg:max-w-sm w-fit mx-auto md:mx-0"
-                            src="https://m.media-amazon.com/images/I/31NDLo8vP7L._AC_SY200_.jpg"
-                            alt="{{ product.name }}"
-                    />
+                     data-product-slug="{{ product.slug }}" class="lg:col-span-4 p-10">
+
                 </div>
                 <!-- product details -->
-                <section class="col-span-6 flex flex-col gap-4">
+                <section class="lg:col-span-6 flex flex-col gap-4">
                     <h1 class="text-base md:text-2xl font-semibold">
                         {{ product.name }}
                     </h1>
@@ -69,7 +65,7 @@
                             <!-- Add to Cart Button -->
                             <button
                                     type="submit"
-                                    class="w-full md:w-[220px] px-6 py-3 bg-white border border-yellow-400 text-yellow-600 font-medium rounded-full shadow-sm hover:bg-yellow-50 hover:shadow-md active:scale-95 transition-all duration-300"
+                                    class="w-full md:w-[220px] px-6 py-3 bg-white border border-primary text-primary hover:text-white font-medium rounded-full shadow-sm hover:bg-primary hover:shadow-md active:scale-95 transition-all duration-300"
                             >
                                 Add to Cart
                             </button>
@@ -77,7 +73,7 @@
                             <!-- Buy Now Button -->
                             <button
                                     type="submit"
-                                    class="w-full md:w-[220px] px-6 py-3 bg-yellow-500 text-white font-semibold rounded-full shadow hover:shadow-lg hover:bg-yellow-600 active:scale-95 transition-all duration-300"
+                                    class="w-full md:w-[220px] px-6 py-3 bg-primary text-white font-semibold rounded-full shadow hover:shadow-lg hover:bg-white hover:text-primary active:scale-95 transition-all duration-300"
                             >
                                 Buy Now
                             </button>

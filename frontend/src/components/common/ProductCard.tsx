@@ -13,7 +13,7 @@ const ProductCard = ({product}: { product: Product }) => {
     const detailPage = productUrl(product.slug)
     return (
         <a href={detailPage} className="group block overflow-hidden border-none">
-            <Card className="w-full max-w-xs mx-auto gap-y-1 cursor-pointer shadow-none border-none">
+            <Card className="w-full min-w-xs mx-auto gap-y-1 cursor-pointer shadow-none border-none">
                 {/* Image Section */}
                 <CardHeader className="p-0 border-0 relative">
 

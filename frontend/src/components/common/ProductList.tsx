@@ -86,7 +86,7 @@ export const ProductList = ({products}:{products: Product[]})=>{
         <div className="h-[1500px] overflow-auto">
 
 
-                <div className=" grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-4 lg:gap-8 sm:grid-cols-2 lg:grid-cols-4">
                     {products?.map((product) => (
                         <MemoizedProductCard key={product.id} product={product} />
                     ))}

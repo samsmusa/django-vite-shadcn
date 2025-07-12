@@ -15,7 +15,7 @@ class UI(models.Model):
     config = models.JSONField()
     featured_product = models.ForeignKey(PromotedProduct, on_delete=models.SET_NULL, null=True, blank=True)
     precedence = models.IntegerField()
-
+    classes = models.CharField(max_length=255, null=True, blank=True)
     class Meta:
         unique_together = ("name", "page", "precedence")
 

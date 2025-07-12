@@ -15,7 +15,8 @@ export function Hydrate<T extends object>({component: Component, containerId, pr
         try {
             if (raw) {
                 if (raw.startsWith('{') || raw.startsWith('[')) {
-                    acc[key] = JSON.parse(raw) as any;
+                    const fixedCnf = raw.replace(/'/g, '"');
+                    acc[key] = JSON.parse(fixedCnf) as any;
                 } else {
                     acc[key] = raw as any;
                 }

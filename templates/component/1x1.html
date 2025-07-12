@@ -1,0 +1,27 @@
+<div class="flex flex-col justify-between gap-4 p-2 h-full w-full rounded-xl bg-card text-card-foreground shadow-sm border">
+
+    <!-- Card Header -->
+    <div class="">
+        <h2 class="text-xl font-bold">{{ ui.name }}</h2>
+    </div>
+
+    <!-- Card Content -->
+    <div class="grow">
+        <img src="{{ ui.config.image.imageUrl }}" alt="{{ ui.config.image.label|default:'product image' }}" class="w-full object-cover rounded-lg">
+        {% if ui.config.image.label %}
+            <p class="text-sm text-center text-muted-foreground mt-2">{{ ui.config.image.label }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Card Footer -->
+    <div class="">
+        {% if ui.dest_url %}
+            <a href="{{ ui.dest_url }}" class="text-primary font-medium hover:underline">
+                See all
+            </a>
+        {% else %}
+            <p class="text-sm text-muted-foreground">No footer content available.</p>
+        {% endif %}
+    </div>
+
+</div>

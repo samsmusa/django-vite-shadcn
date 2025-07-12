@@ -1,6 +1,6 @@
 import asyncio
-import json
 import time
+from collections import defaultdict
 from datetime import date
 
 from django import forms
@@ -39,16 +39,40 @@ class SignUpView(CreateView):
     template_name = "registration/signup.html"
 
 
+#
+
+
+#
+
+#
+
+
 def home_view(request):
-    initial_data = [
-        {"id": 1, "name": "Item 1"},
-        {"id": 2, "name": "Item 2"}
-    ]
+    ui_queryset = UI.objects.filter(page="home").order_by('precedence')
+
+    grouped_ui = defaultdict(lambda: {
+        "precedence_class": None,
+        "components": []
+    })
+
+    for ui in ui_queryset:
+        group = grouped_ui[ui.precedence]
+        group["components"].append(ui)
+
+        if not group["precedence_class"] and ui.classes:
+            group["precedence_class"] = ui.classes
+
+    # for data in grouped_ui.values():
+    #     if len(data["components"]) < 2:
+    #         data["precedence_class"] = None
+
+    grouped_ui_items = sorted(grouped_ui.items())
 
     context = {
-        'initial_data': json.dumps(initial_data),
+        'grouped_ui': grouped_ui_items,
     }
-    return render(request, 'pages/home/index.html', context)
+
+    return render(request, 'pages/home/index2.html', context)
 
 
 def settings_view(request):

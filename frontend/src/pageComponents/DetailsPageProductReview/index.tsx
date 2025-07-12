@@ -59,11 +59,11 @@ const UserReviewCard: React.FC<{ review: IProductReview }> = ({review}) => {
             <div className="shrink-0 space-y-2 sm:w-48 md:w-72">
                 <p className="text-base font-semibold text-gray-900 dark:text-white">{review.user}</p>
                 <div>
-                    <i className="fa-solid fa-star text-yellow-300"></i>
-                    <i className="fa-solid fa-star text-yellow-300"></i>
-                    <i className="fa-solid fa-star text-yellow-300"></i>
-                    <i className="fa-solid fa-star text-yellow-300"></i>
-                    <i className="fa-solid fa-star text-yellow-300"></i>
+                    <i className="fa-solid fa-star text-primary"></i>
+                    <i className="fa-solid fa-star text-primary"></i>
+                    <i className="fa-solid fa-star text-primary"></i>
+                    <i className="fa-solid fa-star text-primary"></i>
+                    <i className="fa-solid fa-star text-primary"></i>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{createdAt}</p>
                 {review.is_verified_purchase && (
@@ -105,7 +105,7 @@ const StarRating: React.FC<StarRatingProps> = ({value, onChange}) => {
                         onMouseEnter={() => setHovered(star)}
                         onMouseLeave={() => setHovered(null)}
                         className={`text-xl transition-colors duration-150 ${
-                            isActive ? "text-yellow-400" : "text-gray-300"
+                            isActive ? "text-primary" : "text-gray-300"
                         }`}
                         title={`${star} star${star > 1 ? "s" : ""}`}
                     >
@@ -180,7 +180,7 @@ const ReviewForm: React.FC<{ product_id: string, refetch: (url: string) => void 
                     )}
                     <button
                         type="submit"
-                        className="middle none center mt-2 rounded-lg bg-orange-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                        className="middle none center mt-2 rounded-lg bg-primary py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                     >
                         Comment
                     </button>
@@ -233,18 +233,18 @@ const Main: React.FC<IProps> = ({product_id}) => {
 
     return (
         <section className="bg-white antialiased dark:bg-gray-900">
-            <div className="grid grid-cols-5">
-                <div className="col-span-2">
+            <div className="grid grid-cols-1  lg:grid-cols-5">
+                <div className="lg:col-span-2">
                     <div className="flex items-center gap-2">
                         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Reviews</h2>
 
                         <div className="mt-2 flex items-center gap-2 sm:mt-0">
                             <div className="flex items-center gap-0.5">
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
                             </div>
                             <p className="text-sm font-medium leading-none text-gray-500 dark:text-gray-400">(4.6)</p>
                             <a href="#"
@@ -256,9 +256,9 @@ const Main: React.FC<IProps> = ({product_id}) => {
                         <div className="mt-6 min-w-0 flex-1 space-y-3 sm:mt-0">
                             <div className="flex items-center gap-2">
                                 <p className="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white">5</p>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
                                 <div className="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700">
-                                    <div className="h-1.5 rounded-full bg-yellow-300" style={{width: "20%"}}></div>
+                                    <div className="h-1.5 rounded-full bg-primary" style={{width: "20%"}}></div>
                                 </div>
                                 <a href="#"
                                    className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left">239 <span
@@ -267,9 +267,9 @@ const Main: React.FC<IProps> = ({product_id}) => {
 
                             <div className="flex items-center gap-2">
                                 <p className="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white">4</p>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
                                 <div className="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700">
-                                    <div className="h-1.5 rounded-full bg-yellow-300" style={{width: "20%"}}></div>
+                                    <div className="h-1.5 rounded-full bg-primary" style={{width: "20%"}}></div>
                                 </div>
                                 <a href="#"
                                    className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left">432 <span
@@ -278,9 +278,9 @@ const Main: React.FC<IProps> = ({product_id}) => {
 
                             <div className="flex items-center gap-2">
                                 <p className="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white">3</p>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
                                 <div className="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700">
-                                    <div className="h-1.5 rounded-full bg-yellow-300" style={{width: "20%"}}></div>
+                                    <div className="h-1.5 rounded-full bg-primary" style={{width: "20%"}}></div>
                                 </div>
                                 <a href="#"
                                    className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left">53 <span
@@ -289,9 +289,9 @@ const Main: React.FC<IProps> = ({product_id}) => {
 
                             <div className="flex items-center gap-2">
                                 <p className="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white">2</p>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
                                 <div className="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700">
-                                    <div className="h-1.5 rounded-full bg-yellow-300" style={{width: "20%"}}></div>
+                                    <div className="h-1.5 rounded-full bg-primary" style={{width: "20%"}}></div>
                                 </div>
                                 <a href="#"
                                    className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left">32 <span
@@ -300,9 +300,9 @@ const Main: React.FC<IProps> = ({product_id}) => {
 
                             <div className="flex items-center gap-2">
                                 <p className="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white">1</p>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
+                                <i className="fa-solid fa-star text-primary"></i>
                                 <div className="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700">
-                                    <div className="h-1.5 rounded-full bg-yellow-300" style={{width: "20%"}}></div>
+                                    <div className="h-1.5 rounded-full bg-primary" style={{width: "20%"}}></div>
                                 </div>
                                 <a href="#"
                                    className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left">13 <span
@@ -311,7 +311,7 @@ const Main: React.FC<IProps> = ({product_id}) => {
                         </div>
                     </div>
                 </div>
-                <div className="col-span-3">
+                <div className="lg:col-span-3">
                     <div className="rounded-lg bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] dark:bg-gray-800">
                         <ReviewForm product_id={product_id} refetch={api.list}/>
                     </div>
